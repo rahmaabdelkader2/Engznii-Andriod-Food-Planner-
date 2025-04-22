@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "446633631156",
+    "project_id": "logingui-firebase",
+    "storage_bucket": "logingui-firebase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446633631156:android:24741196e8b962ff4da6e1",
+        "android_client_info": {
+          "package_name": "com.example.login_gui_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp4G1vfcF2XfoMudK9UCJrP24Au558nhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

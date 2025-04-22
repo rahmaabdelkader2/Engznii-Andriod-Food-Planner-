@@ -1,0 +1,32 @@
+package com.example.login_gui_firebase.model.remote.retrofit.service;
+
+import com.example.login_gui_firebase.model.remote.retrofit.response.MealResponse;
+import com.example.login_gui_firebase.model.remote.retrofit.response.MealsResponseFiltered;
+
+import retrofit2.http.GET;
+import retrofit2.Call;
+import retrofit2.http.Query;
+
+public interface MealServices {
+
+    // show Random meal each time
+    @GET("random.php")
+    Call<MealResponse> getRandomMeal();
+
+    // filtering by category
+    @GET("filter.php")
+    Call<MealsResponseFiltered> filterByCategory(@Query("c") String category);
+
+    // filtering by area ( country )
+    @GET("filter.php")
+    Call<MealsResponseFiltered> filterByArea(@Query("a") String area);
+
+    // filtering by Ingredients
+    @GET("filter.php")
+    Call<MealsResponseFiltered> filterByIngredient(@Query("i") String ingredient);
+
+    // searching by name for ONE specific meal
+    @GET("search.php")
+    Call<MealResponse> searchMealByName(@Query("s") String query);
+}
+

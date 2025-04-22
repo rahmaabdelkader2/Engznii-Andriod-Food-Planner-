@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">login_gui_firebase</string>
+    <string name="Signup">Sign Up</string>
+    <string name="name" />
+    <string name="nametxt">Name\n</string>
+    <string name="emailtxt">Email\n</string>
+    <string name="phonetxt">Phone\n</string>
+    <string name="passtxt">Password</string>
+    <string name="Signbtn">Sign Up</string>
+    <string name="Signupbtn">Sign Up</string>
+    <string name="loginbtn">Log In</string>
+    <string name="Back">Back</string>
+    <string name="Email">Email</string>
+    <string name="password">Password</string>
+    <string name="Login">Log In</string>
+    <string name="login">Log In</string>
+    <string name="back2">Back</string>
+    <string name="randommeal">Meal Of the Day</string>
+    <string name="getrandommeal">Get Random Meal</string>
+</resources>
