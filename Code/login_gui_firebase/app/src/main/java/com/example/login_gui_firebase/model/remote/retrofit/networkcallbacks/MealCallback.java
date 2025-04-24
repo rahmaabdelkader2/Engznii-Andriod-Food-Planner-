@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface MealCallback {
     void onSuccess_meal(List<Meal> singleMeal);
+
     void onFailure_meal(String errorMsg);
 }

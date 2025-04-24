@@ -46,8 +46,8 @@ public class Client implements IClient {
         service.getRandomMeal().enqueue(new Callback<MealResponse>() {
             @Override
             public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getSingleMeal() != null) {
-                    callback.onSuccess_meal(response.body().getSingleMeal());
+                if (response.isSuccessful() && response.body() != null && response.body().getMeals() != null) {
+                    callback.onSuccess_meal(response.body().getMeals());
                 }
             }
 
@@ -106,23 +106,6 @@ public class Client implements IClient {
         });
     }
 
-    public void searchMealByName(String query, MealCallback callback) {
-        service.searchMealByName(query).enqueue(new Callback<MealResponse>() {
-            @Override
-            public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getSingleMeal() != null) {
-                    callback.onSuccess_meal(response.body().getSingleMeal());
-                } else {
-                    callback.onFailure_meal("No meal found with this name");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MealResponse> call, Throwable t) {
-                callback.onFailure_meal("Network error: " + t.getMessage());
-            }
-        });
-    }
 
     @Override
     public void listAllCategories(CategoriesCallback categoriesCallback) {
@@ -177,6 +160,23 @@ public class Client implements IClient {
             @Override
             public void onFailure(Call<IngredientsResponse> call, Throwable t) {
                 ingredientsCallback.onFailureIngredients("Network error: " + t.getMessage());
+            }
+        });
+    }
+    public void getMealDetails(String mealId, MealCallback callback) {
+        service.getMealDetails(mealId).enqueue(new Callback<MealResponse>() {
+            @Override
+            public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getMeals() != null) {
+                    callback.onSuccess_meal(response.body().getMeals());
+                } else {
+                    callback.onFailure_meal("Meal not found");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MealResponse> call, Throwable t) {
+                callback.onFailure_meal("Network error: " + t.getMessage());
             }
         });
     }

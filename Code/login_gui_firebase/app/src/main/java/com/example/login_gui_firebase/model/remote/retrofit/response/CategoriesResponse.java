@@ -7,9 +7,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class CategoriesResponse {
-    @SerializedName("meals")
+    @SerializedName("categories")
     private List<Categories> categories;
     public List<Categories> getCategories(){
         return categories;
+    }
+    public void setCategories(List<Categories> categories) {
+        this.categories = categories;
     }
 }

@@ -33,6 +33,9 @@ public class Presenter implements IPresenter {
                 }
             }
 
+
+
+
             @Override
             public void onFailure_meal(String errorMsg) {
                 Log.e("Presenter", "Error: " + errorMsg);
@@ -57,6 +60,10 @@ public class Presenter implements IPresenter {
                     checkCompletion(remaining.decrementAndGet());
                 }
 
+
+
+
+
                 @Override
                 public void onFailure_meal(String errorMsg) {
                     checkCompletion(remaining.decrementAndGet());
@@ -74,83 +81,7 @@ public class Presenter implements IPresenter {
             });
         }
     }
-    @Override
-    public void filterByCategory(String category) {
 
-        repository.filterByCategory(category, new MealFilteredCallback() {
-            @Override
-            public void onSuccessFilteredMeal(List<FilteredMeal> filteredMeals) {
-                //view.hideLoading();
-                // Convert FilteredMeal to Meal if needed or update IView to handle FilteredMeal
-                // view.showFilteredMeals(convertToMeals(filteredMeals));
-            }
-
-            @Override
-            public void onFailureFilteredMeal(String errorMsg) {
-                //view.hideLoading();
-                view.showError(errorMsg);
-            }
-        });
-    }
-
-    // Implement other methods with similar corrections...
-    @Override
-    public void filterByArea(String area) {
-        //view.showLoading();
-        repository.filterByArea(area, new MealFilteredCallback() {
-            @Override
-            public void onSuccessFilteredMeal(List<FilteredMeal> filteredMeals) {
-                //view.hideLoading();
-                // Handle filtered meals
-            }
-
-            @Override
-            public void onFailureFilteredMeal(String errorMsg) {
-                //view.hideLoading();
-                view.showError(errorMsg);
-            }
-        });
-    }
-
-    @Override
-    public void filterByIngredient(String ingredient) {
-        //view.showLoading();
-        repository.filterByIngredient(ingredient, new MealFilteredCallback() {
-            @Override
-            public void onSuccessFilteredMeal(List<FilteredMeal> filteredMeals) {
-                //view.hideLoading();
-                // Handle filtered meals
-            }
-
-            @Override
-            public void onFailureFilteredMeal(String errorMsg) {
-                //view.hideLoading();
-                view.showError(errorMsg);
-            }
-        });
-    }
-
-    @Override
-    public void searchMealByName(String query) {
-        //view.showLoading();
-        repository.searchMealByName(query, new MealCallback() {
-            @Override
-            public void onSuccess_meal(List<Meal> meals) {
-                //view.hideLoading();
-                if (meals != null && !meals.isEmpty()) {
-                    view.showRandomMeal(meals.get(0));
-                } else {
-                    view.showError("No meals found with this name");
-                }
-            }
-
-            @Override
-            public void onFailure_meal(String errorMsg) {
-                //view.hideLoading();
-                view.showError(errorMsg);
-            }
-        });
-    }
 
     @Override
     public void addMealToFavorites(Meal meal) {

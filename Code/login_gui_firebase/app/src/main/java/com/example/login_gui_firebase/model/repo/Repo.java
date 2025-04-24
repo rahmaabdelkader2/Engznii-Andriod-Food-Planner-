@@ -1,6 +1,5 @@
 package com.example.login_gui_firebase.model.repo;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.login_gui_firebase.model.local.ILocalDataSource;
@@ -15,6 +14,7 @@ import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.Ing
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealCallback;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealFilteredCallback;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Repo implements IRepo {
@@ -35,10 +35,7 @@ public class Repo implements IRepo {
         return instance;
     }
 
-//    @Override
-//    public LiveData<List<Meal>> getStoredMeals() {
-//        return localDataSource.getAllMeals();
-//    }
+
 
     @Override
     public void getRandomMeal(MealCallback callback) {
@@ -107,7 +104,6 @@ public class Repo implements IRepo {
         });
     }
 
-
     @Override
     public void filterByCategory(String category, MealFilteredCallback callback) {
         client.filterByCategory(category, callback);
@@ -123,9 +119,31 @@ public class Repo implements IRepo {
         client.filterByIngredient(ingredient, callback);
     }
 
+
     @Override
-    public void searchMealByName(String query, MealCallback callback) {
-        client.searchMealByName(query, callback);
+    public void getMealDetails(String mealId, MealCallback callback) {
+        client.getMealDetails(mealId, new MealCallback() {
+            @Override
+            public void onSuccess_meal(List<Meal> singleMeal) {
+                if (singleMeal != null && !singleMeal.isEmpty()) {
+                    Meal meal = singleMeal.get(0); // Get first meal from list
+                    callback.onSuccess_meal(Collections.singletonList(meal));
+                    localDataSource.insertMeal(meal);
+                } else {
+                    callback.onFailure_meal("No meal found");
+                }
+
+            }
+
+            @Override
+            public void onFailure_meal(String errorMsg) {
+                callback.onFailure_meal(errorMsg);
+
+            }
+
+
+
+        });
     }
 
     @Override

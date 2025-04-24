@@ -8,6 +8,7 @@ import java.util.List;
 public class IngredientsResponse {
     @SerializedName("meals")
     private List<Ingredients> ingredients;
+
     public List<Ingredients> getIngredients(){
         return ingredients;
     }

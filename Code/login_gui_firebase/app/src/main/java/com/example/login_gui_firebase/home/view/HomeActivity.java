@@ -6,27 +6,21 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-import androidx.room.util.TableInfo;
 
+//import com.example.login_gui_firebase.NavClass;
 import com.bumptech.glide.Glide;
-import com.example.login_gui_firebase.MainActivity;
 import com.example.login_gui_firebase.R;
-import com.example.login_gui_firebase.SignUp;
 import com.example.login_gui_firebase.home.presenter.IPresenter;
 import com.example.login_gui_firebase.home.presenter.Presenter;
 import com.example.login_gui_firebase.model.local.ILocalDataSource;
 import com.example.login_gui_firebase.model.local.LocalDataSource;
-import com.example.login_gui_firebase.model.local.MealDatabase;
 import com.example.login_gui_firebase.model.pojo.FilteredMeal;
 import com.example.login_gui_firebase.model.pojo.Meal;
 import com.example.login_gui_firebase.model.remote.retrofit.client.Client;
@@ -34,6 +28,7 @@ import com.example.login_gui_firebase.model.remote.retrofit.client.IClient;
 import com.example.login_gui_firebase.model.repo.IRepo;
 import com.example.login_gui_firebase.model.repo.Repo;
 import com.example.login_gui_firebase.search.view.SearchActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +39,17 @@ public class HomeActivity extends AppCompatActivity implements IView {
     private TextView mainMealName, mainMealCategory, mainMealArea;
     private RecyclerView mealRecyclerView;
     private mealsAdapter mealsAdapter;
+  //  private NavClass nav;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+//        nav = new NavClass(this);
+//        nav.setupBottomNavigation();
+//        nav.setSelectedItem(R.id.homeID);
+
 
         // Initialize views
         mainMealImage = findViewById(R.id.mainMealImage);
@@ -64,7 +65,6 @@ public class HomeActivity extends AppCompatActivity implements IView {
         mealRecyclerView.setAdapter(mealsAdapter);
 
         // Initialize dependencies
-       // MealDatabase database = MealDatabase.getInstance(this);
         ILocalDataSource localDataSource = new LocalDataSource(this);
         IClient client = Client.getInstance();
         IRepo repository = Repo.getInstance(localDataSource, client);
@@ -97,7 +97,7 @@ public class HomeActivity extends AppCompatActivity implements IView {
         });
 
         // Start auto-scrolling after a delay
-        handler.postDelayed(autoScrollRunnable, 1000);
+        handler.postDelayed(autoScrollRunnable, 500);
         Button gotosearch=findViewById(R.id.gotosearch);
 
     gotosearch.setOnClickListener(new View.OnClickListener() {

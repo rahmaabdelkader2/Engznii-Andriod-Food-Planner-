@@ -51,6 +51,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    implementation ("com.google.android.material:material:1.9.0")
 //    // Firebase
 //    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
 //    implementation("com.google.firebase:firebase-auth")

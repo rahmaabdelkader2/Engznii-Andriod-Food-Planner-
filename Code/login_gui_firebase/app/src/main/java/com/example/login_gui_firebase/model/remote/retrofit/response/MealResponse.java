@@ -7,10 +7,12 @@ import java.util.List;
 
 public class MealResponse {
     @SerializedName("meals")
-    private List<Meal> singleMeal;
+    private List<Meal> meals;
 
-    public List<Meal> getSingleMeal() {
-
-        return singleMeal;
+    public List<Meal> getMeals() {
+        return meals;
+    }
+    public Meal getFirstMeal() {
+        return (meals != null && !meals.isEmpty()) ? meals.get(0) : null;
     }
 }

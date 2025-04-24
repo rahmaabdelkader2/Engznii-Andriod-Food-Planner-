@@ -11,11 +11,12 @@ public interface IClient {
     void filterByCategory(String category, MealFilteredCallback callback);
     void filterByArea(String area, MealFilteredCallback callback);
     void filterByIngredient(String ingredient, MealFilteredCallback callback);
-    void searchMealByName(String query, MealCallback callback);
+
     void listAllCategories(CategoriesCallback categoriesCallback);
     void listAllAreas(AreaCallback areaCallback);
     void listAllIngredients(IngredientsCallback ingredientsCallback);
 
 
+    void getMealDetails(String mealId, MealCallback callback);
 
 }

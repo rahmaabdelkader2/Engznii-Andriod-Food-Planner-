@@ -26,7 +26,7 @@ public interface MealServices {
     @GET("list.php?i=list")
     Call<IngredientsResponse> getAllIngredients();
 
-    // filtering by category
+     //filtering by category
     @GET("filter.php")
     Call<MealsResponseFiltered> filterByCategory(@Query("c") String category);
 
@@ -38,8 +38,9 @@ public interface MealServices {
     @GET("filter.php")
     Call<MealsResponseFiltered> filterByIngredient(@Query("i") String ingredient);
 
-    // searching by name for ONE specific meal
-    @GET("search.php")
-    Call<MealResponse> searchMealByName(@Query("s") String query);
+
+    @GET("lookup.php")
+    Call<MealResponse> getMealDetails(@Query("i") String mealId);
+
 }
 

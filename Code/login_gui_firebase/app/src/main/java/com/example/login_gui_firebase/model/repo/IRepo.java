@@ -18,10 +18,15 @@ public interface IRepo {
     void listAllCategories(CategoriesCallback callback);
     void listAllAreas(AreaCallback callback);
     void listAllIngredients(IngredientsCallback callback);
+
+
+
     void filterByCategory(String category, MealFilteredCallback callback);
     void filterByArea(String area, MealFilteredCallback callback);
     void filterByIngredient(String ingredient, MealFilteredCallback callback);
-    void searchMealByName(String query, MealCallback callback);
+
+    void getMealDetails(String mealId, MealCallback callback);
+
     void insertMeal(Meal meal);
     void deleteMeal(Meal meal);
 }

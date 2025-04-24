@@ -1,0 +1,20 @@
+<!-- item_filtered_meal.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/mealImage"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/image_placeholder" />
+
+    <TextView
+        android:id="@+id/mealName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="18sp" />
+</LinearLayout>
