@@ -17,4 +17,15 @@
     <string name="back2">Back</string>
     <string name="randommeal">Meal Of the Day</string>
     <string name="getrandommeal">Get Random Meal</string>
+    <string name="signin2">"Don't have an account? "</string>
+    <string name="signin3">Sign Up</string>
+    <string name="info">Please fill the following information</string>
+    <string name="Name2">Name</string>
+    <string name="emailtxt2">Email</string>
+    <string name="info2">Already have account?</string>
+    <string name="login3">Log In</string>
+    <string name="phone2">Phone</string>
+    <string name="orsignup">Or Sign Up With</string>
+    <string name="searchline">Search here .......</string>
+    <string name="GotoSearch">Go to Search Page</string>
 </resources>

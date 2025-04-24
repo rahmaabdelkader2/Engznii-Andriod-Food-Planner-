@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,11 +29,11 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.try_login);
 
         db= FirebaseFirestore.getInstance();
-        email=findViewById(R.id.emaillogin);
-        password=findViewById(R.id.passwordlogin);
+        email=findViewById(R.id.emailField2);
+        password=findViewById(R.id.passField2);
         login=findViewById(R.id.loginbtn2);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,11 +78,12 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        back2=findViewById(R.id.backbtn2);
-        back2.setOnClickListener(new View.OnClickListener() {
+        TextView backText = findViewById(R.id.loginclick);
+        backText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(Login.this, SignUp.class);
+                startActivity(intent);
             }
         });
     }

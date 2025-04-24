@@ -1,7 +1,13 @@
 package com.example.login_gui_firebase.model.remote.retrofit.client;
 
+import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.AreaCallback;
+import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.CategoriesCallback;
+import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.IngredientsCallback;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealCallback;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealFilteredCallback;
+import com.example.login_gui_firebase.model.remote.retrofit.response.AreasResponse;
+import com.example.login_gui_firebase.model.remote.retrofit.response.CategoriesResponse;
+import com.example.login_gui_firebase.model.remote.retrofit.response.IngredientsResponse;
 import com.example.login_gui_firebase.model.remote.retrofit.response.MealResponse;
 import com.example.login_gui_firebase.model.remote.retrofit.response.MealsResponseFiltered;
 import com.example.login_gui_firebase.model.remote.retrofit.service.MealServices;
@@ -114,6 +120,63 @@ public class Client implements IClient {
             @Override
             public void onFailure(Call<MealResponse> call, Throwable t) {
                 callback.onFailure_meal("Network error: " + t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void listAllCategories(CategoriesCallback categoriesCallback) {
+        service.getAllCategories().enqueue(new Callback<CategoriesResponse>() {
+            @Override
+            public void onResponse(Call<CategoriesResponse> call, Response<CategoriesResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getCategories() != null) {
+                    categoriesCallback.onSuccessCategories(response.body().getCategories());
+                } else {
+                    categoriesCallback.onFailureCategories("No categories found or empty response");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CategoriesResponse> call, Throwable t) {
+                categoriesCallback.onFailureCategories("Network error: " + t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void listAllAreas(AreaCallback areaCallback) {
+        service.getAllAreas().enqueue(new Callback<AreasResponse>() {
+            @Override
+            public void onResponse(Call<AreasResponse> call, Response<AreasResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getAreas() != null) {
+                    areaCallback.onSuccessArea(response.body().getAreas());
+                } else {
+                    areaCallback.onFailureArea("No areas found or empty response");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AreasResponse> call, Throwable t) {
+                areaCallback.onFailureArea("Network error: " + t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void listAllIngredients(IngredientsCallback ingredientsCallback) {
+        service.getAllIngredients().enqueue(new Callback<IngredientsResponse>() {
+            @Override
+            public void onResponse(Call<IngredientsResponse> call, Response<IngredientsResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getIngredients() != null) {
+                    ingredientsCallback.onSuccessIngredients(response.body().getIngredients());
+                } else {
+                    ingredientsCallback.onFailureIngredients("No ingredients found or empty response");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IngredientsResponse> call, Throwable t) {
+                ingredientsCallback.onFailureIngredients("Network error: " + t.getMessage());
             }
         });
     }

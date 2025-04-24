@@ -4,8 +4,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.login_gui_firebase.model.local.ILocalDataSource;
+import com.example.login_gui_firebase.model.pojo.Area;
+import com.example.login_gui_firebase.model.pojo.Categories;
+import com.example.login_gui_firebase.model.pojo.Ingredients;
 import com.example.login_gui_firebase.model.pojo.Meal;
 import com.example.login_gui_firebase.model.remote.retrofit.client.IClient;
+import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.AreaCallback;
+import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.CategoriesCallback;
+import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.IngredientsCallback;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealCallback;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealFilteredCallback;
 
@@ -57,6 +63,52 @@ public class Repo implements IRepo {
     }
 
     @Override
+    public void listAllCategories(CategoriesCallback callback) {
+        client.listAllCategories(new CategoriesCallback() {
+            @Override
+            public void onSuccessCategories(List<Categories> categoriesList) {
+                callback.onSuccessCategories(categoriesList);
+            }
+
+            @Override
+            public void onFailureCategories(String errorMsg) {
+                callback.onFailureCategories(errorMsg);
+            }
+        });
+    }
+
+    @Override
+    public void listAllAreas(AreaCallback callback) {
+        client.listAllAreas(new AreaCallback() {
+            @Override
+            public void onSuccessArea(List<Area> areaList) {
+                callback.onSuccessArea(areaList);
+            }
+
+            @Override
+            public void onFailureArea(String errorMsg) {
+                callback.onFailureArea(errorMsg);
+            }
+        });
+    }
+
+    @Override
+    public void listAllIngredients(IngredientsCallback callback) {
+        client.listAllIngredients(new IngredientsCallback() {
+            @Override
+            public void onSuccessIngredients(List<Ingredients> ingredientsList) {
+                callback.onSuccessIngredients(ingredientsList);
+            }
+
+            @Override
+            public void onFailureIngredients(String errorMsg) {
+                callback.onFailureIngredients(errorMsg);
+            }
+        });
+    }
+
+
+    @Override
     public void filterByCategory(String category, MealFilteredCallback callback) {
         client.filterByCategory(category, callback);
     }
@@ -78,11 +130,13 @@ public class Repo implements IRepo {
 
     @Override
     public void insertMeal(Meal meal) {
+
         localDataSource.insertMeal(meal);
     }
 
     @Override
     public void deleteMeal(Meal meal) {
+
         localDataSource.deleteMeal(meal);
     }
 }

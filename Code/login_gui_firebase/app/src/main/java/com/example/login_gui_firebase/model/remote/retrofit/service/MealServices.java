@@ -1,5 +1,8 @@
 package com.example.login_gui_firebase.model.remote.retrofit.service;
 
+import com.example.login_gui_firebase.model.remote.retrofit.response.AreasResponse;
+import com.example.login_gui_firebase.model.remote.retrofit.response.CategoriesResponse;
+import com.example.login_gui_firebase.model.remote.retrofit.response.IngredientsResponse;
 import com.example.login_gui_firebase.model.remote.retrofit.response.MealResponse;
 import com.example.login_gui_firebase.model.remote.retrofit.response.MealsResponseFiltered;
 
@@ -12,6 +15,16 @@ public interface MealServices {
     // show Random meal each time
     @GET("random.php")
     Call<MealResponse> getRandomMeal();
+
+
+    @GET("categories.php")
+    Call<CategoriesResponse> getAllCategories();
+
+    @GET("list.php?a=list")
+    Call<AreasResponse> getAllAreas();
+
+    @GET("list.php?i=list")
+    Call<IngredientsResponse> getAllIngredients();
 
     // filtering by category
     @GET("filter.php")

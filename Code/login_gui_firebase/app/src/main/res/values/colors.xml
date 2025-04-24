@@ -3,6 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primary_color">#FFC060</color>
-    <color name="secondary_color">#FFC060</color>
+    <color name="primary_color">#FFFFC060</color>
+    <color name="secondary_color">#E95322</color>
+    <color name="Brown_color">#391713</color>
+
 </resources>

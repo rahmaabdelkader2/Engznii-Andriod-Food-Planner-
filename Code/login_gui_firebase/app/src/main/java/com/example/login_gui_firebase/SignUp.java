@@ -1,9 +1,11 @@
 package com.example.login_gui_firebase;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -39,21 +41,17 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_sign_up);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setContentView(R.layout.try_sigup);
+
 
         db = FirebaseFirestore.getInstance();
 
-        name = findViewById(R.id.nameFiled);
+        name = findViewById(R.id.emailField2);
         phone = findViewById(R.id.phoneField);
-        email = findViewById(R.id.emailField);
+        email = findViewById(R.id.passField2);
         pass = findViewById(R.id.passField);
 
-        signbtn = findViewById(R.id.signbtn);
+        signbtn = findViewById(R.id.loginbtn2);
         signbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,11 +113,13 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
-        back = findViewById(R.id.backbtn);
-        back.setOnClickListener(new View.OnClickListener() {
+
+        TextView backText = findViewById(R.id.loginclick);
+        backText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(SignUp.this, Login.class);
+                startActivity(intent);
             }
         });
     }
