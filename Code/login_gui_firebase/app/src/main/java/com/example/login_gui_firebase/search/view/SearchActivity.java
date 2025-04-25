@@ -1,7 +1,9 @@
 package com.example.login_gui_firebase.search.view;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +32,7 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
     private List<Object> currentItems = new ArrayList<>();
     private String currentMode = "categories";
     private RecyclerView recyclerView;
+    private FrameLayout fragmentContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +113,14 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
             }
         });
 
+        fragmentContainer = findViewById(R.id.fragment_container);
+
+
         filteredMealAdapter.setOnFilteredMealClickListener(mealId -> {
+            // Hide RecyclerView and show Fragment
+            recyclerView.setVisibility(View.GONE);
+            fragmentContainer.setVisibility(View.VISIBLE);
+
             // Create and show the MealFragment
             MealFragment mealFragment = MealFragment.newInstance(mealId);
 
@@ -119,7 +129,19 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
                     .addToBackStack("meal_details")
                     .commit();
         });
+
     }
+    public void onBackPressed() {
+        if (fragmentContainer.getVisibility() == View.VISIBLE) {
+            // If fragment is visible, hide it and show RecyclerView
+            fragmentContainer.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
     private void filterItems(String query) {
         List<Object> filtered = new ArrayList<>();

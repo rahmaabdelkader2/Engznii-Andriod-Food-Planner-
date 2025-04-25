@@ -22,9 +22,6 @@ public class Login extends AppCompatActivity {
     FirebaseFirestore db;
     EditText email,password;
     Button login;
-    Button back2;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

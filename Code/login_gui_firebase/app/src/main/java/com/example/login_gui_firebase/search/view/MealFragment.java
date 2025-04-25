@@ -26,6 +26,8 @@ public class MealFragment extends Fragment {
     private TextView mealName, mealCategory, mealArea, mealInstructions;
     private LinearLayout ingredientsContainer;
 
+    private ImageView backButton;
+
     public static MealFragment newInstance(String mealId) {
         MealFragment fragment = new MealFragment();
         Bundle args = new Bundle();
@@ -46,6 +48,13 @@ public class MealFragment extends Fragment {
         mealArea = view.findViewById(R.id.mealArea);
         mealInstructions = view.findViewById(R.id.mealInstructions);
         ingredientsContainer = view.findViewById(R.id.ingredientsContainer);
+        backButton = view.findViewById(R.id.btn_back);
+
+        backButton.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                ((SearchActivity)getActivity()).onBackPressed();
+            }
+        });
 
         String mealId = getArguments().getString(ARG_MEAL_ID);
         fetchMealDetails(mealId);
