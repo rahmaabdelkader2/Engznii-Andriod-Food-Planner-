@@ -28,4 +28,10 @@
     <string name="orsignup">Or Sign Up With</string>
     <string name="searchline">Search here .......</string>
     <string name="GotoSearch">Go to Search Page</string>
+    <string name="nexttxt">Next</string>
+    <string name="onboardtxt">Find inspiration for every meal everyday</string>
+    <string name="screen1">Screen 1</string>
+    <string name="onboardtxt2">Spend less time planning and more time savoring</string>
+    <string name="GetStarted">Get Started</string>
+    <string name="calnder">Calender</string>
 </resources>

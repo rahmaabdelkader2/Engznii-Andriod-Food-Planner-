@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 //import com.example.login_gui_firebase.NavClass;
 import com.bumptech.glide.Glide;
+import com.example.login_gui_firebase.Calender;
 import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.home.presenter.IPresenter;
 import com.example.login_gui_firebase.home.presenter.Presenter;
@@ -107,6 +108,16 @@ public class HomeActivity extends AppCompatActivity implements IView {
             startActivity(intent);
         }
     });
+
+        Button gotocalender=findViewById(R.id.gotocalender);
+
+        gotocalender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, Calender.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadData() {

@@ -2,17 +2,14 @@ package com.example.login_gui_firebase;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,9 +19,8 @@ import java.util.regex.Pattern;
 
 public class SignUp extends AppCompatActivity {
 
-    FirebaseFirestore db;
-    Button signbtn, back;
-    EditText name, phone, email, pass;
+    private FirebaseFirestore db;
+    private EditText name, phone, email, pass;
 
     // Email validation pattern
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
@@ -32,105 +28,135 @@ public class SignUp extends AppCompatActivity {
             Pattern.CASE_INSENSITIVE
     );
 
-    // Password validation pattern (only letters and numbers)
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
-            "^[a-zA-Z0-9]+$"
-    );
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.try_sigup);
 
+        initializeViews();
+        setupFirestore();
+        setupSignUpButton();
+        setupLoginRedirect();
+    }
 
-        db = FirebaseFirestore.getInstance();
-
+    private void initializeViews() {
         name = findViewById(R.id.emailField2);
         phone = findViewById(R.id.phoneField);
         email = findViewById(R.id.passField2);
         pass = findViewById(R.id.passField);
+    }
 
-        signbtn = findViewById(R.id.loginbtn2);
-        signbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get user input
-                String userName = name.getText().toString().trim();
-                String userPhone = phone.getText().toString().trim();
-                String userEmail = email.getText().toString().trim();
-                String userPass = pass.getText().toString().trim();
+    private void setupFirestore() {
+        db = FirebaseFirestore.getInstance();
+    }
 
-                // Validate inputs
-                if (userName.isEmpty() || userPhone.isEmpty() || userEmail.isEmpty() || userPass.isEmpty()) {
-                    Toast.makeText(SignUp.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+    private void setupSignUpButton() {
+        Button signUpButton = findViewById(R.id.loginbtn2);
+        signUpButton.setOnClickListener(v -> attemptRegistration());
+    }
 
-                // Validate email format
-                if (!isValidEmail(userEmail)) {
-                    email.setError("Please enter a valid email address");
-                    email.requestFocus();
-                    return;
-                }
-
-                // Validate password format
-                if (!isValidPassword(userPass)) {
-                    pass.setError("Password can only contain letters and numbers");
-                    pass.requestFocus();
-                    return;
-                }
-
-                // Check password length (optional)
-                if (userPass.length() < 8) {
-                    pass.setError("Password should be at least 6 characters");
-                    pass.requestFocus();
-                    return;
-                }
-
-                // Create a new user with the data
-                Map<String, Object> user = new HashMap<>();
-                user.put("name", userName);
-                user.put("phone", userPhone);
-                user.put("email", userEmail);
-                user.put("password", userPass); // Note: In production, you should hash passwords
-
-                // Use email as the document ID
-                db.collection("users")
-                        .document(userEmail) // Set custom document ID here
-                        .set(user)
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(SignUp.this, "User registered successfully!", Toast.LENGTH_SHORT).show();
-                            // Clear fields after successful registration
-                            name.setText("");
-                            phone.setText("");
-                            email.setText("");
-                            pass.setText("");
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(SignUp.this, "Error registering user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
-            }
-        });
-
-
-        TextView backText = findViewById(R.id.loginclick);
-        backText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignUp.this, Login.class);
-                startActivity(intent);
-            }
+    private void setupLoginRedirect() {
+        TextView loginRedirect = findViewById(R.id.loginclick);
+        loginRedirect.setOnClickListener(v -> {
+            startActivity(new Intent(SignUp.this, Login.class));
+            finish(); // Optional: close this activity to prevent going back
         });
     }
 
-    // Email validation method
+    private void attemptRegistration() {
+        String userName = name.getText().toString().trim();
+        String userPhone = phone.getText().toString().trim();
+        String userEmail = email.getText().toString().trim();
+        String userPass = pass.getText().toString().trim();
+
+        if (!validateInputs(userName, userPhone, userEmail, userPass)) {
+            return;
+        }
+
+        registerUser(userName, userPhone, userEmail, userPass);
+    }
+
+    private boolean validateInputs(String name, String phone, String email, String password) {
+        if (TextUtils.isEmpty(name)) {
+            this.name.setError("Name is required");
+            this.name.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(phone)) {
+            this.phone.setError("Phone number is required");
+            this.phone.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(email)) {
+            this.email.setError("Email is required");
+            this.email.requestFocus();
+            return false;
+        }
+
+        if (!isValidEmail(email)) {
+            this.email.setError("Please enter a valid email");
+            this.email.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            this.pass.setError("Password is required");
+            this.pass.requestFocus();
+            return false;
+        }
+
+        if (password.length() < 8) {
+            this.pass.setError("Password must be at least 8 characters");
+            this.pass.requestFocus();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void registerUser(String name, String phone, String email, String password) {
+        Map<String, Object> user = new HashMap<>();
+        user.put("name", name);
+        user.put("phone", phone);
+        user.put("email", email);
+        user.put("password", password); // Note: In production, hash this password
+
+        db.collection("users")
+                .document(email)
+                .set(user)
+                .addOnSuccessListener(aVoid -> {
+                    showSuccessMessage();
+                    clearForm();
+                    redirectToLogin();
+                })
+                .addOnFailureListener(e -> {
+                    showErrorMessage(e.getMessage());
+                });
+    }
+
+    private void showSuccessMessage() {
+        Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void clearForm() {
+        name.setText("");
+        phone.setText("");
+        email.setText("");
+        pass.setText("");
+    }
+
+    private void redirectToLogin() {
+        startActivity(new Intent(this, Login.class));
+        finish(); // Optional: close this activity
+    }
+
+    private void showErrorMessage(String error) {
+        Toast.makeText(this, "Registration failed: " + error, Toast.LENGTH_SHORT).show();
+    }
+
     private boolean isValidEmail(String email) {
         return EMAIL_PATTERN.matcher(email).matches();
-    }
-
-    // Password validation method
-    private boolean isValidPassword(String password) {
-        return PASSWORD_PATTERN.matcher(password).matches();
     }
 }

@@ -12,7 +12,12 @@
           "package_name": "com.example.login_gui_firebase"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "446633631156-4sm21dgii3e55h61e94m8m0r0c4rnk24.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAp4G1vfcF2XfoMudK9UCJrP24Au558nhE"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "446633631156-4sm21dgii3e55h61e94m8m0r0c4rnk24.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

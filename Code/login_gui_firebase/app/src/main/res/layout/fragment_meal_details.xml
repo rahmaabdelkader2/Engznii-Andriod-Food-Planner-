@@ -2,31 +2,59 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true">
 
-    <!-- Single direct child of ScrollView -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Back button at the top -->
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginBottom="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/baseline_arrow_left_24" />
+        <!-- Top row with back button and icons -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
 
-        <!-- Meal image -->
+            <!-- Back button -->
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/baseline_arrow_left_24"
+                android:tint="@color/secondary_color"
+                android:layout_alignParentStart="true"/>
+
+            <!-- Favorite icon -->
+            <ImageView
+                android:id="@+id/addtofav"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_toStartOf="@+id/addtocal"
+                android:layout_marginEnd="16dp"
+                android:tint="@color/secondary_color"
+                app:srcCompat="@drawable/fav" />
+
+            <!-- Calendar icon -->
+            <ImageView
+                android:id="@+id/addtocal"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:tint="@color/secondary_color"
+                app:srcCompat="@drawable/calender"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <!-- Rest of your content remains the same -->
         <ImageView
             android:id="@+id/mealImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:contentDescription="Meal image"/>
+            android:contentDescription="Meal image" />
 
         <!-- Meal name -->
         <TextView
@@ -87,5 +115,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="8dp"/>
+
+        <!-- Video header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/league_spartan"
+            android:text="Recipe Tutorial"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- WebView for video -->
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginTop="8dp"/>
+
     </LinearLayout>
 </ScrollView>

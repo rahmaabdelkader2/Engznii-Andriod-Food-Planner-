@@ -21,4 +21,17 @@ public interface MealDao {
 
     @Query("DELETE FROM mealdb WHERE idMeal = :idMeal")
     void deleteMeal(String idMeal);
+
+    // New queries for scheduled meals
+    @Query("UPDATE mealdb SET scheduledDate = :date WHERE idMeal = :mealId")
+    void scheduleMeal(String mealId, String date);
+
+    @Query("UPDATE mealdb SET scheduledDate = null WHERE idMeal = :mealId")
+    void unscheduleMeal(String mealId);
+
+    @Query("SELECT * FROM mealdb WHERE scheduledDate = :date")
+    LiveData<List<Meal>> getMealsForDate(String date);
+
+    @Query("SELECT scheduledDate FROM mealdb WHERE idMeal = :mealId")
+    String getScheduledDateForMeal(String mealId);
 }
