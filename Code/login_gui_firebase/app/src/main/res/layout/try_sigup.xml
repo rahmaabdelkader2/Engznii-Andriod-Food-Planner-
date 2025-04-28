@@ -163,16 +163,16 @@
                 android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_marginEnd="144dp"
+                android:layout_marginBottom="71dp"
                 android:alpha="0.7"
                 android:fontFamily="@font/league_spartan"
                 android:text="@string/info2"
                 android:textColor="@color/Brown_color"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
                 android:id="@+id/loginclick"
@@ -205,7 +205,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/passField" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/googleIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"

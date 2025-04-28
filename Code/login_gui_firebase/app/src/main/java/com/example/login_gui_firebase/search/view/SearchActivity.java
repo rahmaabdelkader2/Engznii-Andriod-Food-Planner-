@@ -10,8 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-//
-//import com.example.login_gui_firebase.NavClass;
+
 import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.model.local.ILocalDataSource;
 import com.example.login_gui_firebase.model.local.LocalDataSource;
@@ -22,13 +21,17 @@ import com.example.login_gui_firebase.model.repo.IRepo;
 import com.example.login_gui_firebase.model.repo.Repo;
 import com.example.login_gui_firebase.search.presenter.ISearchPresenter;
 import com.example.login_gui_firebase.search.presenter.SearchPresenter;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity implements SearchIview {
     private ISearchPresenter Searchpresenter;
     private SearchAdaptor adapter;
-    private FilteredMealAdaptor filteredMealAdapter; // New adapter for meals
+    private FilteredMealAdaptor filteredMealAdapter;
     private List<Object> currentItems = new ArrayList<>();
     private String currentMode = "categories";
     private RecyclerView recyclerView;
@@ -50,14 +53,14 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
         Button btnCategories = findViewById(R.id.btn_categories);
         Button btnAreas = findViewById(R.id.btn_areas);
         Button btnIngredients = findViewById(R.id.btn_ingredients);
+        fragmentContainer = findViewById(R.id.fragment_container);
 
-        // Initialize both adapters
         adapter = new SearchAdaptor();
         filteredMealAdapter = new FilteredMealAdaptor();
 
-        // Start with categories adapter
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        fragmentContainer.setVisibility(View.GONE);
 
         adapter.setOnItemClickListener(new SearchAdaptor.OnItemClickListener() {
             @Override
@@ -76,26 +79,23 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
             }
         });
 
-        filteredMealAdapter.setOnFilteredMealClickListener(meal -> {
-            // Handle when a filtered meal is clicked
-            // Maybe show meal details?
-        });
+        filteredMealAdapter.setOnFilteredMealClickListener(this::showMealFragment);
 
         btnCategories.setOnClickListener(v -> {
             currentMode = "categories";
-            recyclerView.setAdapter(adapter); // Switch back to categories adapter
+            recyclerView.setAdapter(adapter);
             Searchpresenter.listAllCategories();
         });
 
         btnAreas.setOnClickListener(v -> {
             currentMode = "areas";
-            recyclerView.setAdapter(adapter); // Switch back to areas adapter
+            recyclerView.setAdapter(adapter);
             Searchpresenter.listAllAreas();
         });
 
         btnIngredients.setOnClickListener(v -> {
             currentMode = "ingredients";
-            recyclerView.setAdapter(adapter); // Switch back to ingredients adapter
+            recyclerView.setAdapter(adapter);
             Searchpresenter.listAllIngredients();
         });
 
@@ -112,36 +112,37 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
                 return true;
             }
         });
-
-        fragmentContainer = findViewById(R.id.fragment_container);
-
-
-        filteredMealAdapter.setOnFilteredMealClickListener(mealId -> {
-            // Hide RecyclerView and show Fragment
-            recyclerView.setVisibility(View.GONE);
-            fragmentContainer.setVisibility(View.VISIBLE);
-
-            // Create and show the MealFragment
-            MealFragment mealFragment = MealFragment.newInstance(mealId);
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, mealFragment)
-                    .addToBackStack("meal_details")
-                    .commit();
-        });
-
     }
+
+    private void showMealFragment(String mealId) {
+        recyclerView.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
+
+        // Pass null for date since we'll show date picker when user clicks calendar icon
+        MealFragment mealFragment = MealFragment.newInstance(mealId, null);
+
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in_right,
+                        R.anim.slide_out_left,
+                        R.anim.slide_in_left,
+                        R.anim.slide_out_right
+                )
+                .replace(R.id.fragment_container, mealFragment)
+                .addToBackStack("meal_details")
+                .commit();
+    }
+
+    @Override
     public void onBackPressed() {
         if (fragmentContainer.getVisibility() == View.VISIBLE) {
-            // If fragment is visible, hide it and show RecyclerView
+            getSupportFragmentManager().popBackStack();
             fragmentContainer.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
     }
-
 
     private void filterItems(String query) {
         List<Object> filtered = new ArrayList<>();
@@ -166,27 +167,27 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
     public void showCategories(List<Categories> categories) {
         currentItems = new ArrayList<>(categories);
         adapter.setItems(currentItems);
-        recyclerView.setAdapter(adapter); // Ensure we're showing categories
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void showAreas(List<Area> areas) {
         currentItems = new ArrayList<>(areas);
         adapter.setItems(currentItems);
-        recyclerView.setAdapter(adapter); // Ensure we're showing areas
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void showIngredients(List<Ingredients> ingredients) {
         currentItems = new ArrayList<>(ingredients);
         adapter.setItems(currentItems);
-        recyclerView.setAdapter(adapter); // Ensure we're showing ingredients
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void showFilteredMeals(List<FilteredMeal> meals) {
         filteredMealAdapter.setMeals(meals);
-        recyclerView.setAdapter(filteredMealAdapter); // Switch to meals adapter
+        recyclerView.setAdapter(filteredMealAdapter);
     }
 
     @Override

@@ -199,4 +199,3 @@ public class SearchAdaptor extends RecyclerView.Adapter<SearchAdaptor.SearchView
         }
     }
 }
-

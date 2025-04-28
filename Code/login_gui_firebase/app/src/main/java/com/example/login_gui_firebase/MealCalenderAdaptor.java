@@ -1,4 +1,3 @@
-// MealAdapter.java
 package com.example.login_gui_firebase;
 
 import android.view.LayoutInflater;
@@ -15,34 +14,17 @@ import com.example.login_gui_firebase.model.pojo.Meal;
 
 import java.util.List;
 
-public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder> {
-
+public class MealCalenderAdaptor extends RecyclerView.Adapter<MealCalenderAdaptor.MealViewHolder> {
     private List<Meal> meals;
+    private final OnMealClickListener listener;
 
-    public MealAdapter(List<Meal> meals) {
-        this.meals = meals;
+    public interface OnMealClickListener {
+        void onRemoveClick(Meal meal);
+        void onMealClick(Meal meal);
     }
 
-    @NonNull
-    @Override
-    public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.meal_card, parent, false);
-        return new MealViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-        Meal meal = meals.get(position);
-        holder.mealName.setText(meal.getStrMeal());
-        Glide.with(holder.itemView.getContext())
-                .load(meal.getStrMealThumb())
-                .into(holder.mealImage);
-    }
-
-    @Override
-    public int getItemCount() {
-        return meals != null ? meals.size() : 0;
+    public MealCalenderAdaptor(OnMealClickListener listener) {
+        this.listener = listener;
     }
 
     public void updateMeals(List<Meal> meals) {
@@ -50,14 +32,56 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
         notifyDataSetChanged();
     }
 
-    static class MealViewHolder extends RecyclerView.ViewHolder {
-        ImageView mealImage;
-        TextView mealName;
+    @NonNull
+    @Override
+    public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_filtered_meals, parent, false);
+        return new MealViewHolder(view, this);
+    }
 
-        public MealViewHolder(@NonNull View itemView) {
+    @Override
+    public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
+        if (meals != null && position < meals.size()) {
+            holder.bind(meals.get(position));
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return meals == null ? 0 : meals.size();
+    }
+
+    static class MealViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView mealImage;
+        private final TextView mealName;
+        private final TextView mealCategory;
+        private final MealCalenderAdaptor adapter;
+
+        public MealViewHolder(@NonNull View itemView, MealCalenderAdaptor adapter) {
             super(itemView);
+            this.adapter = adapter;
             mealImage = itemView.findViewById(R.id.mealImage);
             mealName = itemView.findViewById(R.id.mealName);
+            mealCategory = itemView.findViewById(R.id.mealCategory);
+
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && adapter.listener != null) {
+                    adapter.listener.onMealClick(adapter.meals.get(position));
+                }
+            });
+
+
+        }
+
+        public void bind(Meal meal) {
+            mealName.setText(meal.getStrMeal());
+            mealCategory.setText(meal.getStrCategory());
+
+            Glide.with(itemView.getContext())
+                    .load(meal.getStrMealThumb())
+                    .into(mealImage);
         }
     }
 }

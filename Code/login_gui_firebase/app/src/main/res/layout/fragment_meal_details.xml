@@ -42,9 +42,9 @@
                 android:id="@+id/addtocal"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
                 android:tint="@color/secondary_color"
-                app:srcCompat="@drawable/calender"
-                android:layout_alignParentEnd="true"/>
+                app:srcCompat="@drawable/calender_svgrepo_com" />
 
         </RelativeLayout>
 

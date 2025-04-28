@@ -1,8 +1,6 @@
 package com.example.login_gui_firebase.search.view;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -26,11 +26,11 @@ import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.Mea
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MealFragment extends Fragment {
     private static final String ARG_MEAL_ID = "meal_id";
-    private static final String PREFS_NAME = "MealCalendar";
-    private static final String KEY_MEAL_PREFIX = "meal_";
+    private static final String ARG_SELECTED_DATE = "selected_date";
 
     private ImageView mealImage, calendarIcon;
     private TextView mealName, mealCategory, mealArea, mealInstructions;
@@ -38,21 +38,39 @@ public class MealFragment extends Fragment {
     private WebView webView;
     private ImageView backButton;
     private String currentMealId;
+    private String currentSelectedDate;
 
-    public static MealFragment newInstance(String mealId) {
+    public static MealFragment newInstance(String mealId, String selectedDate) {
         MealFragment fragment = new MealFragment();
         Bundle args = new Bundle();
         args.putString(ARG_MEAL_ID, mealId);
+        args.putString(ARG_SELECTED_DATE, selectedDate);
         fragment.setArguments(args);
         return fragment;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meal_details, container, false);
+        initViews(view);
+        setupWebView();
+        setupClickListeners();
 
-        // Initialize views
+        if (getArguments() != null) {
+            currentMealId = getArguments().getString(ARG_MEAL_ID);
+            currentSelectedDate = getArguments().getString(ARG_SELECTED_DATE);
+            if (currentMealId != null) {
+                fetchMealDetails(currentMealId);
+                updateCalendarIcon();
+            }
+        }
+
+        return view;
+    }
+
+    private void initViews(View view) {
         mealImage = view.findViewById(R.id.mealImage);
         mealName = view.findViewById(R.id.mealName);
         mealCategory = view.findViewById(R.id.mealCategory);
@@ -62,23 +80,22 @@ public class MealFragment extends Fragment {
         webView = view.findViewById(R.id.webview);
         backButton = view.findViewById(R.id.btn_back);
         calendarIcon = view.findViewById(R.id.addtocal);
+    }
 
-        // Configure WebView for YouTube videos
-        setupWebView();
-
+    private void setupClickListeners() {
         backButton.setOnClickListener(v -> {
             if (getActivity() != null) {
-                ((SearchActivity)getActivity()).onBackPressed();
+                getActivity().onBackPressed();
             }
         });
 
-        currentMealId = getArguments().getString(ARG_MEAL_ID);
-        fetchMealDetails(currentMealId);
-
-        // Set up calendar icon click listener
-        calendarIcon.setOnClickListener(v -> showDatePickerDialog());
-
-        return view;
+        calendarIcon.setOnClickListener(v -> {
+            if (currentSelectedDate == null) {
+                showDatePickerDialog();
+            } else {
+                toggleMealInCalendar();
+            }
+        });
     }
 
     private void showDatePickerDialog() {
@@ -88,14 +105,46 @@ public class MealFragment extends Fragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getContext(),
+                requireContext(),
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String selectedDate = formatDate(selectedYear, selectedMonth, selectedDay);
-                    scheduleMealForDate(selectedDate);
-                    Toast.makeText(getContext(), "Meal saved for " + selectedDate, Toast.LENGTH_SHORT).show();
+                    currentSelectedDate = formatDate(selectedYear, selectedMonth, selectedDay);
+                    scheduleMealForDate(currentSelectedDate);
+                    updateCalendarIcon();
+                    Toast.makeText(getContext(), "Meal saved for " + currentSelectedDate, Toast.LENGTH_SHORT).show();
                 },
                 year, month, day);
         datePickerDialog.show();
+    }
+
+    private void updateCalendarIcon() {
+        if (currentSelectedDate == null) {
+            calendarIcon.setImageResource(R.drawable.calender_svgrepo_com);
+            calendarIcon.setContentDescription("Add to calendar");
+        } else {
+            calendarIcon.setImageResource(R.drawable.selected_calender);
+            calendarIcon.setContentDescription("Remove from calendar");
+        }
+    }
+
+    private void toggleMealInCalendar() {
+        MealDatabase database = MealDatabase.getInstance(requireContext());
+        new Thread(() -> {
+            boolean isScheduled = database.MealDAO().isMealScheduled(currentMealId, currentSelectedDate) > 0;
+
+            if (isScheduled) {
+                database.MealDAO().unscheduleMeal(currentMealId);
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Meal removed from calendar", Toast.LENGTH_SHORT).show();
+                    updateCalendarIcon();
+                });
+            } else {
+                database.MealDAO().scheduleMeal(currentMealId, currentSelectedDate);
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Meal added to calendar", Toast.LENGTH_SHORT).show();
+                    updateCalendarIcon();
+                });
+            }
+        }).start();
     }
 
     private void scheduleMealForDate(String date) {
@@ -106,20 +155,7 @@ public class MealFragment extends Fragment {
     }
 
     private String formatDate(int year, int month, int day) {
-        return String.format("%04d-%02d-%02d", year, month + 1, day);
-    }
-
-    private void saveMealForDate(String date) {
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        // Save the meal ID with the date as key
-        editor.putString(date, currentMealId);
-
-        // Also save the date with meal ID as key for easy lookup
-        editor.putString(KEY_MEAL_PREFIX + currentMealId, date);
-
-        editor.apply();
+        return String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, day);
     }
 
     private void setupWebView() {
@@ -127,7 +163,6 @@ public class MealFragment extends Fragment {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
-        webSettings.setPluginState(WebSettings.PluginState.ON);
     }
 
     private void fetchMealDetails(String mealId) {
@@ -137,7 +172,7 @@ public class MealFragment extends Fragment {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         if (meals != null && !meals.isEmpty()) {
-                            updateUI(meals.get(0)); // Get first meal from list
+                            updateUI(meals.get(0));
                         } else {
                             Toast.makeText(getContext(), "No meal details found", Toast.LENGTH_SHORT).show();
                         }
@@ -157,30 +192,25 @@ public class MealFragment extends Fragment {
     }
 
     private void updateUI(Meal meal) {
-        // Set basic info
         mealName.setText(meal.getStrMeal());
         mealCategory.setText("Category: " + meal.getStrCategory());
         mealArea.setText("Origin: " + meal.getStrArea());
         mealInstructions.setText(meal.getStrInstructions());
 
-        // Load image
         Glide.with(this)
                 .load(meal.getStrMealThumb())
                 .into(mealImage);
 
-        // Add ingredients and measures
         addIngredientsToView(meal);
-
-        // Load YouTube video if available
         loadYoutubeVideo(meal.getStrYoutube());
     }
 
     private void loadYoutubeVideo(String youtubeUrl) {
         if (youtubeUrl != null && !youtubeUrl.isEmpty()) {
-            // Extract video ID from URL (handles different YouTube URL formats)
             String videoId = extractYoutubeVideoId(youtubeUrl);
             if (videoId != null) {
-                String videoHtml = "<html><body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + videoId + "\" frameborder=\"0\" allowfullscreen></iframe></body></html>";
+                String videoHtml = "<html><body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" +
+                        videoId + "\" frameborder=\"0\" allowfullscreen></iframe></body></html>";
                 webView.loadData(videoHtml, "text/html", "utf-8");
                 webView.setVisibility(View.VISIBLE);
             } else {
@@ -194,7 +224,6 @@ public class MealFragment extends Fragment {
     private String extractYoutubeVideoId(String url) {
         String videoId = null;
         if (url != null && url.trim().length() > 0) {
-            // Handle different YouTube URL formats
             if (url.contains("youtu.be/")) {
                 videoId = url.substring(url.lastIndexOf("/") + 1);
             } else if (url.contains("v=")) {
@@ -229,5 +258,13 @@ public class MealFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (webView != null) {
+            webView.destroy();
+        }
+        super.onDestroyView();
     }
 }

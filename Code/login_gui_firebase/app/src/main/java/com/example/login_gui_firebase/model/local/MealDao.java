@@ -1,11 +1,11 @@
 package com.example.login_gui_firebase.model.local;
 
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.login_gui_firebase.model.pojo.Meal;
 
@@ -22,11 +22,14 @@ public interface MealDao {
     @Query("DELETE FROM mealdb WHERE idMeal = :idMeal")
     void deleteMeal(String idMeal);
 
-    // New queries for scheduled meals
+    // Scheduled meals functionality
+    @Update
+    void updateMeal(Meal meal);
+
     @Query("UPDATE mealdb SET scheduledDate = :date WHERE idMeal = :mealId")
     void scheduleMeal(String mealId, String date);
 
-    @Query("UPDATE mealdb SET scheduledDate = null WHERE idMeal = :mealId")
+    @Query("UPDATE mealdb SET scheduledDate = NULL WHERE idMeal = :mealId")
     void unscheduleMeal(String mealId);
 
     @Query("SELECT * FROM mealdb WHERE scheduledDate = :date")
@@ -34,4 +37,7 @@ public interface MealDao {
 
     @Query("SELECT scheduledDate FROM mealdb WHERE idMeal = :mealId")
     String getScheduledDateForMeal(String mealId);
+
+    @Query("SELECT COUNT(*) FROM mealdb WHERE idMeal = :mealId AND scheduledDate = :date")
+    int isMealScheduled(String mealId, String date);
 }
