@@ -10,9 +10,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.login_gui_firebase.home.view.HomeActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,8 +26,8 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.try_login);
 
         db= FirebaseFirestore.getInstance();
-        email=findViewById(R.id.emailField2);
-        password=findViewById(R.id.passField2);
+        email=findViewById(R.id.firstnamefield);
+        password=findViewById(R.id.emailfiled);
         login=findViewById(R.id.loginbtn2);
         login.setOnClickListener(new View.OnClickListener() {
             @Override

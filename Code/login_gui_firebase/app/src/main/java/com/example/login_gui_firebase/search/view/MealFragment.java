@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -32,13 +33,14 @@ public class MealFragment extends Fragment {
     private static final String ARG_MEAL_ID = "meal_id";
     private static final String ARG_SELECTED_DATE = "selected_date";
 
-    private ImageView mealImage, calendarIcon;
+    private ImageView mealImage, calendarIcon, favoriteIcon;
     private TextView mealName, mealCategory, mealArea, mealInstructions;
     private LinearLayout ingredientsContainer;
     private WebView webView;
     private ImageView backButton;
     private String currentMealId;
     private String currentSelectedDate;
+    private Meal currentMeal;
 
     public static MealFragment newInstance(String mealId, String selectedDate) {
         MealFragment fragment = new MealFragment();
@@ -80,6 +82,7 @@ public class MealFragment extends Fragment {
         webView = view.findViewById(R.id.webview);
         backButton = view.findViewById(R.id.btn_back);
         calendarIcon = view.findViewById(R.id.addtocal);
+        favoriteIcon = view.findViewById(R.id.addtofav);
     }
 
     private void setupClickListeners() {
@@ -96,6 +99,36 @@ public class MealFragment extends Fragment {
                 toggleMealInCalendar();
             }
         });
+
+        favoriteIcon.setOnClickListener(v -> {
+            if (currentMeal != null) {
+                toggleFavoriteStatus();
+            }
+        });
+    }
+
+    private void toggleFavoriteStatus() {
+        boolean newFavoriteStatus = !currentMeal.isFavorite();
+        currentMeal.setFavorite(newFavoriteStatus);
+        updateFavoriteIcon(newFavoriteStatus);
+
+        new Thread(() -> {
+            MealDatabase database = MealDatabase.getInstance(requireContext());
+            database.MealDAO().setFavoriteStatus(currentMeal.getIdMeal(), newFavoriteStatus);
+            requireActivity().runOnUiThread(() -> {
+                String message = newFavoriteStatus ? "Added to favorites" : "Removed from favorites";
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            });
+        }).start();
+    }
+
+    private void updateFavoriteIcon(boolean isFavorite) {
+        // Change both icon and color
+        int iconRes = isFavorite ? R.drawable.fav2 : R.drawable.fav;
+        int colorRes = isFavorite ? R.color.secondary_color : R.color.secondary_color;
+
+        favoriteIcon.setImageResource(iconRes);
+        favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), colorRes));
     }
 
     private void showDatePickerDialog() {
@@ -133,6 +166,7 @@ public class MealFragment extends Fragment {
 
             if (isScheduled) {
                 database.MealDAO().unscheduleMeal(currentMealId);
+                currentSelectedDate = null;
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), "Meal removed from calendar", Toast.LENGTH_SHORT).show();
                     updateCalendarIcon();
@@ -172,7 +206,9 @@ public class MealFragment extends Fragment {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         if (meals != null && !meals.isEmpty()) {
-                            updateUI(meals.get(0));
+                            currentMeal = meals.get(0);
+                            updateUI(currentMeal);
+                            checkFavoriteStatus();
                         } else {
                             Toast.makeText(getContext(), "No meal details found", Toast.LENGTH_SHORT).show();
                         }
@@ -189,6 +225,17 @@ public class MealFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void checkFavoriteStatus() {
+        new Thread(() -> {
+            MealDatabase database = MealDatabase.getInstance(requireContext());
+            boolean isFavorite = database.MealDAO().isFavorite(currentMeal.getIdMeal());
+            requireActivity().runOnUiThread(() -> {
+                currentMeal.setFavorite(isFavorite);
+                updateFavoriteIcon(isFavorite);
+            });
+        }).start();
     }
 
     private void updateUI(Meal meal) {

@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 //import com.example.login_gui_firebase.NavClass;
 import com.bumptech.glide.Glide;
 import com.example.login_gui_firebase.Calender;
+import com.example.login_gui_firebase.Favourites;
+import com.example.login_gui_firebase.ProfileActivity;
 import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.home.presenter.IPresenter;
 import com.example.login_gui_firebase.home.presenter.Presenter;
@@ -40,6 +42,7 @@ public class HomeActivity extends AppCompatActivity implements IView {
     private TextView mainMealName, mainMealCategory, mainMealArea;
     private RecyclerView mealRecyclerView;
     private mealsAdapter mealsAdapter;
+
   //  private NavClass nav;
     private BottomNavigationView bottomNavigationView;
 
@@ -47,10 +50,6 @@ public class HomeActivity extends AppCompatActivity implements IView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-//        nav = new NavClass(this);
-//        nav.setupBottomNavigation();
-//        nav.setSelectedItem(R.id.homeID);
-
 
         // Initialize views
         mainMealImage = findViewById(R.id.mainMealImage);
@@ -115,6 +114,26 @@ public class HomeActivity extends AppCompatActivity implements IView {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, Calender.class);
+                startActivity(intent);
+            }
+        });
+
+        Button gotoprofile=findViewById(R.id.gotoprofile);
+
+        gotoprofile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button gotofav=findViewById(R.id.gotofav);
+
+        gotofav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, Favourites.class);
                 startActivity(intent);
             }
         });

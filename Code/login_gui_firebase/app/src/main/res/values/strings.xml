@@ -20,7 +20,7 @@
     <string name="signin2">"Don't have an account? "</string>
     <string name="signin3">Sign Up</string>
     <string name="info">Please fill the following information</string>
-    <string name="Name2">Name</string>
+    <string name="Name2">First Name</string>
     <string name="emailtxt2">Email</string>
     <string name="info2">Already have account?</string>
     <string name="login3">Log In</string>
@@ -35,4 +35,10 @@
     <string name="GetStarted">Get Started</string>
     <string name="calnder">Calender</string>
     <string name="default_web_client_id">446633631156-4sm21dgii3e55h61e94m8m0r0c4rnk24.apps.googleusercontent.com</string>
+    <string name="Surname">Surname</string>
+    <string name="Nationality">Nationality</string>
+    <string name="Profile">My Profile</string>
+    <string name="gotoprofile">Go To Profile</string>
+    <string name="favMeals">Favorite Meals</string>
+    <string name="gotofav">Go To Fav</string>
 </resources>

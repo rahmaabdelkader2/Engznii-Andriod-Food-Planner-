@@ -40,4 +40,15 @@ public interface MealDao {
 
     @Query("SELECT COUNT(*) FROM mealdb WHERE idMeal = :mealId AND scheduledDate = :date")
     int isMealScheduled(String mealId, String date);
+    // Add these for favorites
+    @Query("SELECT * FROM mealdb WHERE isFavorite = 1")
+    LiveData<List<Meal>> getFavoriteMeals();
+
+    @Query("UPDATE mealdb SET isFavorite = :isFavorite WHERE idMeal = :mealId")
+    void setFavoriteStatus(String mealId, boolean isFavorite);
+
+    @Query("SELECT isFavorite FROM mealdb WHERE idMeal = :mealId")
+    boolean isFavorite(String mealId);
+
+
 }

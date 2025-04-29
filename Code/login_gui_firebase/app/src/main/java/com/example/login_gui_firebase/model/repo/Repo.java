@@ -1,5 +1,6 @@
 package com.example.login_gui_firebase.model.repo;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.login_gui_firebase.model.local.ILocalDataSource;
@@ -145,10 +146,30 @@ public class Repo implements IRepo {
 
         });
     }
+    @Override
+    public LiveData<List<Meal>> getFavoriteMeals() {
+        return localDataSource.getFavoriteMeals();
+    }
+
+    @Override
+    public void setFavoriteStatus(Meal meal, boolean isFavorite) {
+        localDataSource.setFavoriteStatus(meal, isFavorite);
+    }
+
+    @Override
+    public boolean isFavorite(String mealId) {
+        return localDataSource.isFavorite(mealId);
+    }
 
     @Override
     public void insertMeal(Meal meal) {
 
+        localDataSource.insertMeal(meal);
+        // Check if meal already exists to preserve favorite status
+        boolean wasFavorite = localDataSource.isFavorite(meal.getIdMeal());
+        if (wasFavorite) {
+            meal.setFavorite(true);
+        }
         localDataSource.insertMeal(meal);
     }
 

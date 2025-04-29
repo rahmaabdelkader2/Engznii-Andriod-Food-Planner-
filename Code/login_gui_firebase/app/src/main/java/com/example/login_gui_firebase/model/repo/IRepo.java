@@ -19,6 +19,10 @@ public interface IRepo {
     void listAllAreas(AreaCallback callback);
     void listAllIngredients(IngredientsCallback callback);
 
+    LiveData<List<Meal>> getFavoriteMeals();
+    void setFavoriteStatus(Meal meal, boolean isFavorite);
+    boolean isFavorite(String mealId);
+
 
 
     void filterByCategory(String category, MealFilteredCallback callback);

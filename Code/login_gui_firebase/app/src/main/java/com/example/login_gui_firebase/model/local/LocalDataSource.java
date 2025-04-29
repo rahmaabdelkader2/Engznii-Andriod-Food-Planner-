@@ -39,4 +39,23 @@ public class LocalDataSource implements ILocalDataSource {
     public LiveData<List<Meal>> getAllMeals() {
         return mealDao.getAllMeals();
     }
+
+    // Add these methods
+    @Override
+    public LiveData<List<Meal>> getFavoriteMeals() {
+        return mealDao.getFavoriteMeals();
+    }
+
+    @Override
+    public void setFavoriteStatus(Meal meal, boolean isFavorite) {
+        new Thread(() -> {
+            meal.setFavorite(isFavorite);
+            mealDao.setFavoriteStatus(meal.getIdMeal(), isFavorite);
+        }).start();
+    }
+
+    @Override
+    public boolean isFavorite(String mealId) {
+        return mealDao.isFavorite(mealId);
+    }
 }

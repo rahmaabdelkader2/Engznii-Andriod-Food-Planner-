@@ -14,7 +14,7 @@
         android:background="#FC9A01">
 
         <TextView
-            android:id="@+id/Logintxt"
+            android:id="@+id/Profiletxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="160dp"
@@ -60,7 +60,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/firstnameid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
@@ -75,17 +75,43 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
+            <TextView
+                android:id="@+id/surnameid"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="130dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/Surname"
+                android:textColor="@color/Brown_color"
+                android:textColorLink="@color/Brown_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
             <EditText
-                android:id="@+id/emailField2"
-                android:layout_width="322dp"
+                android:id="@+id/firstnamefield"
+                android:layout_width="150dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="32dp"
-                android:layout_marginEnd="62dp"
+                android:background="@drawable/rectangle_shape"
+                android:inputType="textEmailAddress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/firstnameid" />
+
+            <EditText
+                android:id="@+id/surnamefield"
+                android:layout_width="150dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="22dp"
+                android:layout_marginEnd="56dp"
                 android:background="@drawable/rectangle_shape"
                 android:inputType="textEmailAddress"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView13" />
+                app:layout_constraintStart_toEndOf="@+id/firstnamefield"
+                app:layout_constraintTop_toBottomOf="@+id/firstnameid" />
 
             <TextView
                 android:id="@+id/textView14"
@@ -93,23 +119,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="1dp"
                 android:alpha="0.7"
                 android:fontFamily="@font/league_spartan"
                 android:text="@string/emailtxt2"
                 android:textColor="@color/Brown_color"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/passField2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/emailField2" />
+                app:layout_constraintTop_toBottomOf="@+id/firstnamefield" />
 
             <TextView
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="13dp"
                 android:alpha="0.7"
                 android:fontFamily="@font/league_spartan"
                 android:text="@string/phone2"
@@ -117,7 +141,34 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/passField2" />
+                app:layout_constraintTop_toBottomOf="@+id/emailfield" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="225dp"
+                android:layout_marginTop="13dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/Nationality"
+                android:textColor="@color/Brown_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/emailfield" />
+
+            <Spinner
+                android:id="@+id/countrySpinner"
+                android:layout_width="130dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="220dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="56dp"
+                android:background="@drawable/rectangle_shape"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
 
             <TextView
                 android:id="@+id/textView12"
@@ -133,16 +184,6 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/phoneField" />
-
-            <EditText
-                android:id="@+id/passField2"
-                android:layout_width="322dp"
-                android:layout_height="45dp"
-                android:layout_marginStart="32dp"
-                android:background="@drawable/rectangle_shape"
-                android:inputType="textPassword"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
             <TextView
                 android:id="@+id/textView15"
@@ -216,9 +257,10 @@
 
             <EditText
                 android:id="@+id/phoneField"
-                android:layout_width="322dp"
+                android:layout_width="180dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/rectangle_shape"
                 android:ems="10"
                 android:inputType="phone"
@@ -235,6 +277,18 @@
                 android:inputType="textPassword"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+            <EditText
+                android:id="@+id/emailfield"
+                android:layout_width="322dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="54dp"
+                android:background="@drawable/rectangle_shape"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

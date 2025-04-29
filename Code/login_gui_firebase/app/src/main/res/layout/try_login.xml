@@ -14,7 +14,7 @@
         android:background="#FC9A01">
 
         <TextView
-            android:id="@+id/Logintxt"
+            android:id="@+id/Profiletxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="162dp"
@@ -60,7 +60,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/firstnameid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
@@ -76,7 +76,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
             <EditText
-                android:id="@+id/emailField2"
+                android:id="@+id/firstnamefield"
                 android:layout_width="322dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="32dp"
@@ -86,7 +86,7 @@
                 android:inputType="textEmailAddress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView13" />
+                app:layout_constraintTop_toBottomOf="@+id/firstnameid" />
 
             <TextView
                 android:id="@+id/textView14"
@@ -101,12 +101,12 @@
                 android:textColor="@color/Brown_color"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/passField2"
+                app:layout_constraintBottom_toTopOf="@+id/emailfiled"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/emailField2" />
+                app:layout_constraintTop_toBottomOf="@+id/firstnamefield" />
 
             <EditText
-                android:id="@+id/passField2"
+                android:id="@+id/emailfiled"
                 android:layout_width="322dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="32dp"
@@ -175,7 +175,7 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/passField2" />
+                app:layout_constraintTop_toBottomOf="@+id/emailfiled" />
 
             <ImageView
                 android:id="@+id/imageView"

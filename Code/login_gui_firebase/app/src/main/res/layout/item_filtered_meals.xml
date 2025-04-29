@@ -26,18 +26,20 @@
             android:id="@+id/mealName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:ellipsize="end"
-            android:maxLines="1"/>
+            android:fontFamily="@font/league_spartan"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/mealCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            android:textColor="?android:attr/textColorSecondary"/>
+            android:fontFamily="@font/league_spartan"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>

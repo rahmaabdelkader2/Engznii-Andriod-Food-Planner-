@@ -10,7 +10,7 @@
     <!-- Top Half - Single Random Meal -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="230dp"
         android:layout_weight="0"
         android:orientation="vertical"
         android:padding="16dp">
@@ -46,7 +46,7 @@
     <!-- Bottom Half - 10 Random Meals -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="356dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -62,19 +62,31 @@
             android:layout_height="wrap_content"
             android:text="@string/calnder" />
 
+        <Button
+            android:id="@+id/gotoprofile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gotoprofile" />
+
+        <Button
+            android:id="@+id/gotofav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gotofav" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="More Random Meals"
             android:textSize="18sp"
-                                android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"/>
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mealRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             android:clipToPadding="true"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp" />
