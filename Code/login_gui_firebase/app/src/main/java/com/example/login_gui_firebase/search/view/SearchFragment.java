@@ -1,20 +1,28 @@
 package com.example.login_gui_firebase.search.view;
-
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.login_gui_firebase.MealFragment;
 import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.model.local.ILocalDataSource;
 import com.example.login_gui_firebase.model.local.LocalDataSource;
-import com.example.login_gui_firebase.model.pojo.*;
+import com.example.login_gui_firebase.model.pojo.Area;
+import com.example.login_gui_firebase.model.pojo.Categories;
+import com.example.login_gui_firebase.model.pojo.FilteredMeal;
+import com.example.login_gui_firebase.model.pojo.Ingredients;
 import com.example.login_gui_firebase.model.remote.retrofit.client.Client;
 import com.example.login_gui_firebase.model.remote.retrofit.client.IClient;
 import com.example.login_gui_firebase.model.repo.IRepo;
@@ -22,14 +30,11 @@ import com.example.login_gui_firebase.model.repo.Repo;
 import com.example.login_gui_firebase.search.presenter.ISearchPresenter;
 import com.example.login_gui_firebase.search.presenter.SearchPresenter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-public class SearchActivity extends AppCompatActivity implements SearchIview {
-    private ISearchPresenter Searchpresenter;
+public class SearchFragment extends Fragment implements SearchIview {
+    private ISearchPresenter searchPresenter;
     private SearchAdaptor adapter;
     private FilteredMealAdaptor filteredMealAdapter;
     private List<Object> currentItems = new ArrayList<>();
@@ -37,68 +42,89 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
     private RecyclerView recyclerView;
     private FrameLayout fragmentContainer;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_activty);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_search_activty, container, false);
 
-        ILocalDataSource localDataSource = new LocalDataSource(this);
+        // Initialize dependencies
+        ILocalDataSource localDataSource = new LocalDataSource(requireContext());
         IClient client = Client.getInstance();
         IRepo repository = Repo.getInstance(localDataSource, client);
+        searchPresenter = new SearchPresenter(this, repository);
 
-        Searchpresenter = new SearchPresenter(this, repository);
+        // Initialize views
+        initializeViews(view);
+        setupAdapters();
+        setupButtonListeners(view);
+        setupSearchView(view);
 
-        recyclerView = findViewById(R.id.search_recycler_view);
-        SearchView searchView = findViewById(R.id.search_view);
-        Button btnCategories = findViewById(R.id.btn_categories);
-        Button btnAreas = findViewById(R.id.btn_areas);
-        Button btnIngredients = findViewById(R.id.btn_ingredients);
-        fragmentContainer = findViewById(R.id.fragment_container);
+        // Load initial data
+        //searchPresenter.listAllCategories();
 
+        return view;
+    }
+
+    private void initializeViews(View view) {
+        recyclerView = view.findViewById(R.id.search_recycler_view);
+        fragmentContainer = view.findViewById(R.id.fragment_container);
+        fragmentContainer.setVisibility(View.GONE);
+    }
+
+    private void setupAdapters() {
         adapter = new SearchAdaptor();
         filteredMealAdapter = new FilteredMealAdaptor();
 
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fragmentContainer.setVisibility(View.GONE);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter); // Set default adapter
 
         adapter.setOnItemClickListener(new SearchAdaptor.OnItemClickListener() {
             @Override
             public void onCategoryClick(Categories category) {
-                Searchpresenter.filterByCategory(category.getStrCategory());
+                searchPresenter.filterByCategory(category.getStrCategory());
             }
 
             @Override
             public void onAreaClick(Area area) {
-                Searchpresenter.filterByAreas(area.getStrArea());
+                searchPresenter.filterByAreas(area.getStrArea());
             }
 
             @Override
             public void onIngredientClick(Ingredients ingredient) {
-                Searchpresenter.filterByIngredients(ingredient.getStrIngredient());
+                searchPresenter.filterByIngredients(ingredient.getStrIngredient());
             }
         });
 
         filteredMealAdapter.setOnFilteredMealClickListener(this::showMealFragment);
+    }
+
+    private void setupButtonListeners(View view) {
+        Button btnCategories = view.findViewById(R.id.btn_categories);
+        Button btnAreas = view.findViewById(R.id.btn_areas);
+        Button btnIngredients = view.findViewById(R.id.btn_ingredients);
 
         btnCategories.setOnClickListener(v -> {
             currentMode = "categories";
             recyclerView.setAdapter(adapter);
-            Searchpresenter.listAllCategories();
+            searchPresenter.listAllCategories();
         });
 
         btnAreas.setOnClickListener(v -> {
             currentMode = "areas";
             recyclerView.setAdapter(adapter);
-            Searchpresenter.listAllAreas();
+            searchPresenter.listAllAreas();
         });
 
         btnIngredients.setOnClickListener(v -> {
             currentMode = "ingredients";
             recyclerView.setAdapter(adapter);
-            Searchpresenter.listAllIngredients();
+            searchPresenter.listAllIngredients();
         });
+    }
 
+    private void setupSearchView(View view) {
+        SearchView searchView = view.findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -118,10 +144,9 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
         recyclerView.setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
 
-        // Pass null for date since we'll show date picker when user clicks calendar icon
         MealFragment mealFragment = MealFragment.newInstance(mealId, null);
 
-        getSupportFragmentManager().beginTransaction()
+        getChildFragmentManager().beginTransaction()
                 .setCustomAnimations(
                         R.anim.slide_in_right,
                         R.anim.slide_out_left,
@@ -131,17 +156,6 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
                 .replace(R.id.fragment_container, mealFragment)
                 .addToBackStack("meal_details")
                 .commit();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (fragmentContainer.getVisibility() == View.VISIBLE) {
-            getSupportFragmentManager().popBackStack();
-            fragmentContainer.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        } else {
-            super.onBackPressed();
-        }
     }
 
     private void filterItems(String query) {
@@ -165,10 +179,19 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
 
     @Override
     public void showCategories(List<Categories> categories) {
-        currentItems = new ArrayList<>(categories);
-        adapter.setItems(currentItems);
-        recyclerView.setAdapter(adapter);
+        if (getActivity() == null) return;
+
+        getActivity().runOnUiThread(() -> {
+            currentItems = new ArrayList<>(categories);
+            adapter.setItems(currentItems);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setVisibility(View.VISIBLE);
+            fragmentContainer.setVisibility(View.GONE);
+
+
+        });
     }
+
 
     @Override
     public void showAreas(List<Area> areas) {
@@ -184,14 +207,36 @@ public class SearchActivity extends AppCompatActivity implements SearchIview {
         recyclerView.setAdapter(adapter);
     }
 
+
     @Override
     public void showFilteredMeals(List<FilteredMeal> meals) {
-        filteredMealAdapter.setMeals(meals);
-        recyclerView.setAdapter(filteredMealAdapter);
+        if (getActivity() == null) return;
+
+        getActivity().runOnUiThread(() -> {
+            Log.d("SearchFragment", "Received " + meals.size() + " filtered meals");
+            if (meals.isEmpty()) {
+                Toast.makeText(getContext(), "No meals found", Toast.LENGTH_SHORT).show();
+            } else {
+                filteredMealAdapter.setMeals(meals);
+                recyclerView.setAdapter(filteredMealAdapter);
+                recyclerView.setVisibility(View.VISIBLE);
+                fragmentContainer.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
     public void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean onBackPressed() {
+        if (fragmentContainer.getVisibility() == View.VISIBLE) {
+            getChildFragmentManager().popBackStack();
+            fragmentContainer.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            return true;
+        }
+        return false;
     }
 }

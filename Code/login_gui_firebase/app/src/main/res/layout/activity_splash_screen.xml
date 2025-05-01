@@ -10,17 +10,20 @@
     <ImageView
         android:id="@+id/imageView8"
         android:layout_width="match_parent"
-        android:layout_height="866dp"
-        app:srcCompat="@drawable/final3"
-        tools:layout_editor_absoluteX="-15dp"
-        tools:layout_editor_absoluteY="-11dp" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/final2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationView3"
         android:layout_width="221dp"
         android:layout_height="130dp"
-        android:layout_marginTop="496dp"
-        android:layout_marginEnd="92dp"
+        android:layout_marginTop="468dp"
+        android:layout_marginEnd="84dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"

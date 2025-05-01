@@ -3,11 +3,9 @@ package com.example.login_gui_firebase.home.presenter;
 import android.util.Log;
 
 import com.example.login_gui_firebase.home.view.IView;
-import com.example.login_gui_firebase.model.pojo.FilteredMeal;
 import com.example.login_gui_firebase.model.pojo.Meal;
-import com.example.login_gui_firebase.model.repo.IRepo;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealCallback;
-import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealFilteredCallback;
+import com.example.login_gui_firebase.model.repo.IRepo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +20,7 @@ public class Presenter implements IPresenter {
         this.repository = repository;
     }
 
+    @Override
     public void getRandomMeal() {
         repository.getRandomMeal(new MealCallback() {
             @Override
@@ -33,9 +32,6 @@ public class Presenter implements IPresenter {
                 }
             }
 
-
-
-
             @Override
             public void onFailure_meal(String errorMsg) {
                 Log.e("Presenter", "Error: " + errorMsg);
@@ -44,6 +40,7 @@ public class Presenter implements IPresenter {
         });
     }
 
+    @Override
     public void getTenRandomMeals() {
         List<Meal> meals = new ArrayList<>();
         AtomicInteger remaining = new AtomicInteger(10);
@@ -57,20 +54,18 @@ public class Presenter implements IPresenter {
                             meals.add(mealList.get(0));
                         }
                     }
-                    checkCompletion(remaining.decrementAndGet());
+                    if (remaining.decrementAndGet() == 0) {
+                        if (!meals.isEmpty()) {
+                            view.showTenRandomMeals(meals);
+                        } else {
+                            view.showError("Failed to load meals");
+                        }
+                    }
                 }
-
-
-
-
 
                 @Override
                 public void onFailure_meal(String errorMsg) {
-                    checkCompletion(remaining.decrementAndGet());
-                }
-
-                private void checkCompletion(int count) {
-                    if (count == 0) {
+                    if (remaining.decrementAndGet() == 0) {
                         if (!meals.isEmpty()) {
                             view.showTenRandomMeals(meals);
                         } else {
@@ -81,7 +76,6 @@ public class Presenter implements IPresenter {
             });
         }
     }
-
 
     @Override
     public void addMealToFavorites(Meal meal) {

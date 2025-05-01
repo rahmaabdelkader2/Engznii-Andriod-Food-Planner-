@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.login_gui_firebase.home.view.HomeActivity;
+import com.example.login_gui_firebase.MainActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -53,7 +53,7 @@ public class Login extends AppCompatActivity {
                                     if (storedPassword != null && storedPassword.equals(userPassword)) {
                                         // Login successful
                                         Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(Login.this, HomeActivity.class);
+                                        Intent intent = new Intent(Login.this, MainActivity.class);
                                         startActivity(intent);
 
                                     } else {

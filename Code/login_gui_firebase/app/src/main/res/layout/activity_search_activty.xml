@@ -1,80 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    tools:context=".search.view.SearchActivity">
+    tools:context=".search.view.SearchFragment">
 
-    <!-- SearchView and Buttons remain the same -->
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@drawable/rectangle_shape"
-        app:queryHint="Search..." />
-
+    <!-- Main search content -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white">
 
-        <Button
-            android:id="@+id/btn_categories"
-            android:layout_width="0dp"
+        <!-- SearchView -->
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/secondary_color"
-            android:text="Categories" />
+            android:layout_margin="8dp"
+            android:background="@drawable/rectangle_shape"
+            app:queryHint="Search..." />
 
-        <Button
-            android:id="@+id/btn_areas"
-            android:layout_width="0dp"
+        <!-- Filter Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/secondary_color"
-            android:text="Areas" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_ingredients"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/secondary_color"
-            android:text="Ingredients" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/btn_categories"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/secondary_color"
+                android:text="Categories" />
 
-    <!-- Combined container for both RecyclerView and Fragment -->
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+            <Button
+                android:id="@+id/btn_areas"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/secondary_color"
+                android:text="Areas" />
 
-        <!-- RecyclerView (visible by default) -->
+            <Button
+                android:id="@+id/btn_ingredients"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/secondary_color"
+                android:text="Ingredients" />
+        </LinearLayout>
+
+        <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"/>
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
-        <!-- Fragment container (initially gone) -->
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"/>
-    </FrameLayout>
-
-    <!-- Bottom Navigation Bar -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+    <!-- Fragment Container (will overlay everything when visible) -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_corner"
-        app:itemRippleColor="@color/primary_color"
-        app:menu="@menu/navigation_items" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/white"/>
+</FrameLayout>

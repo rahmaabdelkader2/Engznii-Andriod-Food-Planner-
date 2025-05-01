@@ -1,5 +1,7 @@
 package com.example.login_gui_firebase.search.presenter;
 
+import android.util.Log;
+
 import com.example.login_gui_firebase.model.pojo.*;
 import com.example.login_gui_firebase.model.repo.IRepo;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.*;
@@ -20,8 +22,10 @@ public class SearchPresenter implements ISearchPresenter {
     @Override
     public void listAllCategories() {
         repository.listAllCategories(new CategoriesCallback() {
+
             @Override
             public void onSuccessCategories(List<Categories> categories) {
+
                 view.showCategories(categories);
             }
 
@@ -107,17 +111,3 @@ public class SearchPresenter implements ISearchPresenter {
         });
     }
 }
-// @Override
-//    public void searchMealByName(String query) {
-//        repository.searchMealByName(query, new MealCallback() {
-//            @Override
-//            public void onSuccess_meal(List<Meal> meals) {
-//                view.showMeals(meals);
-//            }
-//
-//            @Override
-//            public void onFailure_meal(String error) {
-//                view.showError(error);
-//            }
-//        });
-//    }

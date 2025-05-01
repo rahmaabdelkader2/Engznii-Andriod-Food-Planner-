@@ -1,14 +1,11 @@
 package com.example.login_gui_firebase.model.remote.authentication;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
+import com.example.login_gui_firebase.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -30,6 +27,7 @@ public class Firebase {
     private GoogleSignInClient mGoogleSignInClient;
     private final Context context;
     private String selectedCountryCode;
+    public static final int RC_SIGN_IN = 9001;
 
     public interface AuthCallback {
         void onSuccess(FirebaseUser user);
@@ -81,7 +79,6 @@ public class Firebase {
                                 .addOnSuccessListener(aVoid -> callback.onSuccess(firebaseUser))
                                 .addOnFailureListener(e -> {
                                     callback.onFailure("Failed to store user data: " + e.getMessage());
-                                    // Rollback: delete the auth user if Firestore fails
                                     firebaseUser.delete();
                                 });
                     } else {

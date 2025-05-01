@@ -1,4 +1,5 @@
-package com.example.login_gui_firebase;
+// MealCalenderAdaptor.java
+package com.example.login_gui_firebase.calender.view;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.model.pojo.Meal;
 
 import java.util.List;
@@ -19,7 +21,6 @@ public class MealCalenderAdaptor extends RecyclerView.Adapter<MealCalenderAdapto
     private final OnMealClickListener listener;
 
     public interface OnMealClickListener {
-        void onRemoveClick(Meal meal);
         void onMealClick(Meal meal);
     }
 
@@ -37,13 +38,21 @@ public class MealCalenderAdaptor extends RecyclerView.Adapter<MealCalenderAdapto
     public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_filtered_meals, parent, false);
-        return new MealViewHolder(view, this);
+        return new MealViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         if (meals != null && position < meals.size()) {
-            holder.bind(meals.get(position));
+            Meal meal = meals.get(position);
+            holder.bind(meal);
+
+            // Set click listener for the entire item
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onMealClick(meal);
+                }
+            });
         }
     }
 
@@ -52,27 +61,23 @@ public class MealCalenderAdaptor extends RecyclerView.Adapter<MealCalenderAdapto
         return meals == null ? 0 : meals.size();
     }
 
-    static class MealViewHolder extends RecyclerView.ViewHolder {
+    class MealViewHolder extends RecyclerView.ViewHolder {
         private final ImageView mealImage;
         private final TextView mealName;
         private final TextView mealCategory;
-        private final MealCalenderAdaptor adapter;
 
-        public MealViewHolder(@NonNull View itemView, MealCalenderAdaptor adapter) {
+        public MealViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.adapter = adapter;
             mealImage = itemView.findViewById(R.id.mealImage);
             mealName = itemView.findViewById(R.id.mealName);
             mealCategory = itemView.findViewById(R.id.mealCategory);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION && adapter.listener != null) {
-                    adapter.listener.onMealClick(adapter.meals.get(position));
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onMealClick(meals.get(position));
                 }
             });
-
-
         }
 
         public void bind(Meal meal) {

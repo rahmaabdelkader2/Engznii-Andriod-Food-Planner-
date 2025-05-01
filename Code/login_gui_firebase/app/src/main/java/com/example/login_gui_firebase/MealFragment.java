@@ -1,4 +1,4 @@
-package com.example.login_gui_firebase.search.view;
+package com.example.login_gui_firebase;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -19,7 +19,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.model.local.MealDatabase;
 import com.example.login_gui_firebase.model.pojo.Meal;
 import com.example.login_gui_firebase.model.remote.retrofit.client.Client;

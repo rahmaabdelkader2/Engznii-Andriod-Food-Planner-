@@ -1,0 +1,81 @@
+package com.example.login_gui_firebase.favorites.view;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.example.login_gui_firebase.R;
+import com.example.login_gui_firebase.model.pojo.Meal;
+
+import java.util.List;
+
+public class FavMealAdaptor extends RecyclerView.Adapter<FavMealAdaptor.MealViewHolder> {
+    private List<Meal> meals;
+    private Context context;
+    private OnFavouriteMealClickListener listener;
+
+    public interface OnFavouriteMealClickListener {
+
+
+        void onMealClick(Meal meal);
+    }
+
+    public FavMealAdaptor(Context context, List<Meal> meals, OnFavouriteMealClickListener listener) {
+        this.context = context;
+        this.meals = meals;
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_favourite_meal, parent, false);
+        return new MealViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
+        Meal meal = meals.get(position);
+
+        Glide.with(context)
+                .load(meal.getStrMealThumb())
+                .into(holder.mealImage);
+
+        holder.mealName.setText(meal.getStrMeal());
+        holder.mealCategory.setText("Category: " + meal.getStrCategory());
+
+        holder.itemView.setOnClickListener(v -> {
+            listener.onMealClick(meal);
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return meals.size();
+    }
+
+    public void updateMeals(List<Meal> newMeals) {
+        meals = newMeals;
+        notifyDataSetChanged();
+    }
+
+    static class MealViewHolder extends RecyclerView.ViewHolder {
+        ImageView mealImage;
+        TextView mealName, mealCategory;
+
+        public MealViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mealImage = itemView.findViewById(R.id.favMealImage);
+            mealName = itemView.findViewById(R.id.favMealName);
+            mealCategory = itemView.findViewById(R.id.favMealCategory);
+        }
+    }
+}
