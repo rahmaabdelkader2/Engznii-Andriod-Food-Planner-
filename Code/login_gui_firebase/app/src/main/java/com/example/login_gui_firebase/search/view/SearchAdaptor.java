@@ -56,7 +56,7 @@ public class SearchAdaptor extends RecyclerView.Adapter<SearchAdaptor.SearchView
     @Override
     public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_search, parent, false);
+                .inflate(R.layout.item_meal_card, parent, false);
         return new SearchViewHolder(view);
     }
 
@@ -99,8 +99,8 @@ public class SearchAdaptor extends RecyclerView.Adapter<SearchAdaptor.SearchView
 
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.itemName1);
-            itemImage = itemView.findViewById(R.id.imageView2);
+            itemName = itemView.findViewById(R.id.itemCategory);
+            itemImage = itemView.findViewById(R.id.mealImage);
         }
 
         void bindCategory(Categories category) {

@@ -3,8 +3,10 @@ package com.example.login_gui_firebase.home.presenter;
 import android.util.Log;
 
 import com.example.login_gui_firebase.home.view.IView;
+import com.example.login_gui_firebase.model.pojo.FilteredMeal;
 import com.example.login_gui_firebase.model.pojo.Meal;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealCallback;
+import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealFilteredCallback;
 import com.example.login_gui_firebase.model.repo.IRepo;
 
 import java.util.ArrayList;
@@ -41,49 +43,54 @@ public class Presenter implements IPresenter {
     }
 
     @Override
-    public void getTenRandomMeals() {
-        List<Meal> meals = new ArrayList<>();
-        AtomicInteger remaining = new AtomicInteger(10);
+    public void getMealsByArea(String area) {
+        repository.filterByArea(area, new MealFilteredCallback() {
+            @Override
+            public void onSuccessFilteredMeal(List<FilteredMeal> filteredMeals) {
+                if (filteredMeals != null && !filteredMeals.isEmpty()) {
+                    fetchMealDetails(filteredMeals); // Now fetches all meals without limit
+                } else {
+                    view.showError("No meals found for " + area);
+                }
+            }
 
-        for (int i = 0; i < 10; i++) {
-            repository.getRandomMeal(new MealCallback() {
+            @Override
+            public void onFailureFilteredMeal(String errorMsg) {
+                view.showError(errorMsg);
+            }
+        });
+    }
+
+    private void fetchMealDetails(List<FilteredMeal> filteredMeals) {
+        List<Meal> meals = new ArrayList<>();
+        AtomicInteger counter = new AtomicInteger(0);
+
+        for (FilteredMeal filteredMeal : filteredMeals) {
+            repository.getMealDetails(filteredMeal.getIdMeal(), new MealCallback() {
                 @Override
-                public void onSuccess_meal(List<Meal> mealList) {
-                    synchronized (meals) {
-                        if (mealList != null && !mealList.isEmpty()) {
-                            meals.add(mealList.get(0));
-                        }
+                public void onSuccess_meal(List<Meal> mealDetails) {
+                    if (mealDetails != null && !mealDetails.isEmpty()) {
+                        meals.add(mealDetails.get(0));
                     }
-                    if (remaining.decrementAndGet() == 0) {
+
+                    // Check if all details have been loaded
+                    if (counter.incrementAndGet() == filteredMeals.size()) {
                         if (!meals.isEmpty()) {
-                            view.showTenRandomMeals(meals);
+                            view.showMealsByArea(meals);
                         } else {
-                            view.showError("Failed to load meals");
+                            view.showError("Could not load meal details");
                         }
                     }
                 }
 
                 @Override
                 public void onFailure_meal(String errorMsg) {
-                    if (remaining.decrementAndGet() == 0) {
-                        if (!meals.isEmpty()) {
-                            view.showTenRandomMeals(meals);
-                        } else {
-                            view.showError("Failed to load meals");
-                        }
+                    Log.e("Presenter", "Error loading meal details: " + errorMsg);
+                    if (counter.incrementAndGet() == filteredMeals.size() && !meals.isEmpty()) {
+                        view.showMealsByArea(meals);
                     }
                 }
             });
         }
-    }
-
-    @Override
-    public void addMealToFavorites(Meal meal) {
-        repository.insertMeal(meal);
-    }
-
-    @Override
-    public void removeMealFromFavorites(Meal meal) {
-        repository.deleteMeal(meal);
     }
 }

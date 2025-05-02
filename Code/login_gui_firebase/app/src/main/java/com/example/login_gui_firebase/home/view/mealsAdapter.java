@@ -31,7 +31,7 @@ public class mealsAdapter extends RecyclerView.Adapter<mealsAdapter.MealViewHold
     @NonNull
     @Override
     public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_meal, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_meal_card, parent, false);
         return new MealViewHolder(view);
     }
 
@@ -57,10 +57,7 @@ public class mealsAdapter extends RecyclerView.Adapter<mealsAdapter.MealViewHold
         meals = newMeals;
         notifyDataSetChanged();
     }
-    public void addMeal(Meal meal) {
-        meals.add(meal);
-        notifyItemInserted(meals.size() - 1);
-    }
+
 
     static class MealViewHolder extends RecyclerView.ViewHolder {
         ImageView mealImage;
@@ -69,9 +66,9 @@ public class mealsAdapter extends RecyclerView.Adapter<mealsAdapter.MealViewHold
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
             mealImage = itemView.findViewById(R.id.mealImage);
-            mealName = itemView.findViewById(R.id.mealName);
-            mealCategory = itemView.findViewById(R.id.mealCategory);
-            mealArea = itemView.findViewById(R.id.mealArea);
+            mealName = itemView.findViewById(R.id.itemName);
+            mealCategory = itemView.findViewById(R.id.itemCategory);
+            mealArea = itemView.findViewById(R.id.itemArea);
         }
     }
 }

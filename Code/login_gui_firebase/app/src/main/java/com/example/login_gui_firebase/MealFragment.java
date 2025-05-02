@@ -24,7 +24,10 @@ import com.example.login_gui_firebase.model.pojo.Meal;
 import com.example.login_gui_firebase.model.remote.retrofit.client.Client;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealCallback;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -139,13 +142,44 @@ public class MealFragment extends Fragment {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireContext(),
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    currentSelectedDate = formatDate(selectedYear, selectedMonth, selectedDay);
-                    scheduleMealForDate(currentSelectedDate);
-                    updateCalendarIcon();
-                    Toast.makeText(getContext(), "Meal saved for " + currentSelectedDate, Toast.LENGTH_SHORT).show();
+                    String selectedDate = formatDate(selectedYear, selectedMonth, selectedDay);
+                    if (isDateWithinAllowedRange(selectedDate)) {
+                        currentSelectedDate = selectedDate;
+                        scheduleMealForDate(currentSelectedDate);
+                        updateCalendarIcon();
+                        Toast.makeText(getContext(), "Meal saved for " + currentSelectedDate, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "You can only plan meals for today and the next 7 days", Toast.LENGTH_SHORT).show();
+                    }
                 },
                 year, month, day);
+
+        // Set min and max dates (in milliseconds)
+        Calendar minDate = Calendar.getInstance();
+        Calendar maxDate = Calendar.getInstance();
+        maxDate.add(Calendar.DAY_OF_YEAR, 7); // Today + 7 days
+
+        datePickerDialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
+        datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
+
         datePickerDialog.show();
+    }
+
+    private boolean isDateWithinAllowedRange(String date) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date selectedDate = sdf.parse(date);
+            Date today = new Date();
+            Date oneWeekLater = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+            // Clear time part for accurate comparison
+            today = sdf.parse(sdf.format(today));
+            oneWeekLater = sdf.parse(sdf.format(oneWeekLater));
+
+            return !selectedDate.before(today) && !selectedDate.after(oneWeekLater);
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
     private void updateCalendarIcon() {

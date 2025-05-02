@@ -37,7 +37,7 @@ public class FavMealAdaptor extends RecyclerView.Adapter<FavMealAdaptor.MealView
     @Override
     public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_favourite_meal, parent, false);
+                .inflate(R.layout.item_meal_card, parent, false);
         return new MealViewHolder(view);
     }
 
@@ -73,9 +73,9 @@ public class FavMealAdaptor extends RecyclerView.Adapter<FavMealAdaptor.MealView
 
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
-            mealImage = itemView.findViewById(R.id.favMealImage);
-            mealName = itemView.findViewById(R.id.favMealName);
-            mealCategory = itemView.findViewById(R.id.favMealCategory);
+            mealImage = itemView.findViewById(R.id.mealImage);
+            mealName = itemView.findViewById(R.id.itemName);
+            mealCategory = itemView.findViewById(R.id.itemCategory);
         }
     }
 }

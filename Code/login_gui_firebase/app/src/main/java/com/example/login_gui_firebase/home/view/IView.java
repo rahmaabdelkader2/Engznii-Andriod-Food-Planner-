@@ -8,9 +8,10 @@ import java.util.List;
 
 public interface IView {
     void showRandomMeal(Meal meal);
-    void showTenRandomMeals(List<Meal> meals);
-    void showFilteredMeals(List<FilteredMeal> meals);
+
     void showError(String errorMessage);
+    void showMealsByArea(List<Meal> meals);
+
 //    void showLoading();
 //    void hideLoading();
 }

@@ -34,7 +34,7 @@ public class FavFragment extends Fragment implements IFavView {
     private RecyclerView recyclerView;
     private FavMealAdaptor mealAdapter;
     private View emptyView;
-    private TextView favtitle;
+
 
     @Nullable
     @Override
@@ -43,7 +43,6 @@ public class FavFragment extends Fragment implements IFavView {
 
         recyclerView = view.findViewById(R.id.recyclerViewfav);
         emptyView = view.findViewById(R.id.emptyView);
-        favtitle = view.findViewById(R.id.favtitle);
         setupRecyclerView();
         setupPresenter();
 
@@ -55,7 +54,7 @@ public class FavFragment extends Fragment implements IFavView {
 
             // Open MealFragment when a meal is clicked
             MealFragment mealFragment = MealFragment.newInstance(meal.getIdMeal(), null);
-            favtitle.setVisibility(View.GONE);
+
             recyclerView.setVisibility(View.GONE);
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mealFragment)

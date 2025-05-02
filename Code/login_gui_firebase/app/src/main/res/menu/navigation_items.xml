@@ -1,27 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 
     <item android:id="@+id/CalenderID"
         android:icon="@drawable/calender"
-        android:title="Calender" />
+        android:title="Calender"
+        app:itemTextColor="@color/white" />
+
 
     <item android:id="@+id/SearchID"
         android:icon="@drawable/search"
-        android:title="Search" />
+        android:title="Search"
+        app:itemTextColor="@color/white" />
+
 
     <item android:id="@+id/homeID"
         android:icon="@drawable/home"
-        android:title="Home"  />
+        android:title="Home"
+        app:itemTextColor="@color/white" />
+
 
     <item android:id="@+id/FavID"
         android:icon="@drawable/fav"
-        android:title="Favorites" />
+        android:title="Favorites"
+        app:itemTextColor="@color/white" />
+
 
     <item android:id="@+id/profileID"
         android:icon="@drawable/profile"
-        android:title="Profile" />
+        android:title="Profile"
+        app:itemTextColor="@color/white" />
+
 
 
 </menu>

@@ -27,6 +27,7 @@ import com.example.login_gui_firebase.model.repo.IRepo;
 import com.example.login_gui_firebase.model.repo.Repo;
 import com.example.login_gui_firebase.model.pojo.Meal;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -59,10 +60,13 @@ public class CalenderFragment extends Fragment implements ICalenderView {
 
     private void setupRecyclerView() {
         mealAdapter = new MealCalenderAdaptor(new MealCalenderAdaptor.OnMealClickListener() {
-
             @Override
             public void onMealClick(Meal meal) {
-                showMealFragment(meal.getIdMeal());
+                if (isDateWithinAllowedRange(currentSelectedDate)) {
+                    showMealFragment(meal.getIdMeal());
+                } else {
+                    showError("You can only plan meals for today and the next 7 days");
+                }
             }
         });
 
@@ -78,13 +82,34 @@ public class CalenderFragment extends Fragment implements ICalenderView {
     }
 
     private void setupCalendar() {
-        calendarView.setMinDate(System.currentTimeMillis());
+        long today = System.currentTimeMillis();
+        long oneWeekLater = today + (7 * 24 * 60 * 60 * 1000); // Today + 7 days in milliseconds
+
+        calendarView.setMinDate(today);
+        calendarView.setMaxDate(oneWeekLater); // Set max date to 7 days from today
 
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             currentSelectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
             updateDateDisplay(currentSelectedDate);
             presenter.getMealsForDate(currentSelectedDate);
         });
+    }
+
+    private boolean isDateWithinAllowedRange(String date) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date selectedDate = sdf.parse(date);
+            Date today = new Date();
+            Date oneWeekLater = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+            // Clear time part for accurate comparison
+            today = sdf.parse(sdf.format(today));
+            oneWeekLater = sdf.parse(sdf.format(oneWeekLater));
+
+            return !selectedDate.before(today) && !selectedDate.after(oneWeekLater);
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
     private void loadInitialData() {
@@ -101,23 +126,55 @@ public class CalenderFragment extends Fragment implements ICalenderView {
         try {
             Date parsedDate = inputFormat.parse(date);
             String formattedDate = outputFormat.format(parsedDate);
-            selectedDateTextView.setText(formattedDate);
+
+            if (!isDateWithinAllowedRange(date)) {
+                selectedDateTextView.setText(formattedDate + " (Not available for planning)");
+            } else {
+                selectedDateTextView.setText(formattedDate);
+            }
         } catch (Exception e) {
             selectedDateTextView.setText(date);
         }
     }
 
     private void showMealFragment(String mealId) {
+        try {
+            if (!isDateWithinAllowedRange(currentSelectedDate)) {
+                showError("You can only plan meals for today and the next 7 days");
+                return;
+            }
 
-        getView().findViewById(R.id.main_content).setVisibility(View.GONE);
+            // Safely get the root view
+            View rootView = getView();
+            if (rootView == null) {
+                showError("Fragment view not ready");
+                return;
+            }
 
-        getView().findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+            // Find views with null checks
+            View mainContent = rootView.findViewById(R.id.main_content);
+            View fragmentContainer = rootView.findViewById(R.id.fragment_container);
 
-        MealFragment mealFragment = MealFragment.newInstance(mealId, currentSelectedDate);
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, mealFragment)
-                .addToBackStack(null)
-                .commit();
+            if (mainContent == null || fragmentContainer == null) {
+                showError("Layout configuration error");
+                return;
+            }
+
+            // Update UI
+            mainContent.setVisibility(View.GONE);
+            fragmentContainer.setVisibility(View.VISIBLE);
+
+            // Create and show the fragment
+            MealFragment mealFragment = MealFragment.newInstance(mealId, currentSelectedDate);
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, mealFragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        } catch (Exception e) {
+            showError("Error showing meal details: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -133,17 +190,19 @@ public class CalenderFragment extends Fragment implements ICalenderView {
     public void showError(String errorMessage) {
         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
+
     @Override
     public void onResume() {
         super.onResume();
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (getView().findViewById(R.id.fragment_container).getVisibility() == View.VISIBLE) {
+                View rootView = getView();
+                if (rootView != null && rootView.findViewById(R.id.fragment_container).getVisibility() == View.VISIBLE) {
                     // Show the main content again
-                    getView().findViewById(R.id.main_content).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.main_content).setVisibility(View.VISIBLE);
                     // Hide the fragment container
-                    getView().findViewById(R.id.fragment_container).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.fragment_container).setVisibility(View.GONE);
                     getParentFragmentManager().popBackStack();
                 } else {
                     requireActivity().onBackPressed();
