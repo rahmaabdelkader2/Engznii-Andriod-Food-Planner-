@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "446633631156",
+    "project_id": "logingui-firebase",
+    "storage_bucket": "logingui-firebase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446633631156:android:24741196e8b962ff4da6e1",
+        "android_client_info": {
+          "package_name": "com.example.login_gui_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446633631156-d09p6ludh1bi7mbm33kf0a3kq261k3g6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.login_gui_firebase",
+            "certificate_hash": "74a3124ac99cb2ad5cc604b92c5fd2da8f620e1c"
+          }
+        },
+        {
+          "client_id": "446633631156-73no9uk6et50au865asaue1a9lbscmcg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp4G1vfcF2XfoMudK9UCJrP24Au558nhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "446633631156-4sm21dgii3e55h61e94m8m0r0c4rnk24.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

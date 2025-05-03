@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Login_gui_firebase" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!--        &lt;!&ndash; <item name="colorPrimary">@color/my_light_primary</item> &ndash;&gt;-->
+        <!--        <item name="colorPrimary">@color/primary_color</item>-->
+        <!--        <item name="colorSecondary">@color/secondary_color</item>-->
+
+    </style>
+
+    <style name="Theme.Login_gui_firebase" parent="Base.Theme.Login_gui_firebase" />
+</resources>

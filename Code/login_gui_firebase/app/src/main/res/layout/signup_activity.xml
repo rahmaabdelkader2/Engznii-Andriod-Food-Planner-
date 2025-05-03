@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.7"
+        android:background="#FC9A01">
+
+        <TextView
+            android:id="@+id/Profiletxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="162dp"
+            android:layout_marginEnd="162dp"
+            android:layout_marginBottom="650dp"
+            android:fontFamily="@font/league_spartan"
+            android:text="@string/Signup"
+            android:textColor="@color/white"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-15dp"
+        app:cardCornerRadius="28dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="625dp">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/info"
+                android:textColor="@color/Brown_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/firstnameid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="20dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/Name2"
+                android:textColor="@color/Brown_color"
+                android:textColorLink="@color/Brown_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+            <TextView
+                android:id="@+id/surnameid"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:layout_marginStart="96dp"
+                android:layout_marginTop="20dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/Surname"
+                android:textColor="@color/Brown_color"
+                android:textColorLink="@color/Brown_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/firstnameid"
+                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+            <EditText
+                android:id="@+id/firstnamefield"
+                android:layout_width="150dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/rectangle_shape"
+                android:inputType="textEmailAddress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/firstnameid" />
+
+            <EditText
+                android:id="@+id/surnamefield"
+                android:layout_width="150dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="22dp"
+                android:layout_marginEnd="56dp"
+                android:background="@drawable/rectangle_shape"
+                android:inputType="textEmailAddress"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/firstnamefield"
+                app:layout_constraintTop_toBottomOf="@+id/firstnameid" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="20dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/emailtxt2"
+                android:textColor="@color/Brown_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/firstnamefield" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="13dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/phone2"
+                android:textColor="@color/Brown_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/emailfield" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="225dp"
+                android:layout_marginTop="13dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/Nationality"
+                android:textColor="@color/Brown_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/emailfield" />
+
+            <Spinner
+                android:id="@+id/countrySpinner"
+                android:layout_width="130dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="220dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rectangle_shape"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="Password"
+                android:textColor="@color/Brown_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/phoneField" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="150dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/orsignup"
+                android:textColor="@color/Brown_color"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loginbtn2" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="130dp"
+                android:layout_marginBottom="40dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/info2"
+                android:textColor="@color/Brown_color"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/loginclick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="70dp"
+                android:layout_marginBottom="40dp"
+                android:alpha="0.7"
+                android:clickable="true"
+                android:fontFamily="@font/league_spartan"
+                android:onClick="onTextClicked"
+                android:text="@string/login3"
+                android:textColor="@color/secondary_color"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/loginbtn2"
+                android:layout_width="195dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="109dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/secondary_color"
+                android:text="@string/Signup"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/passField" />
+
+            <ImageView
+                android:id="@+id/googleIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loginbtn2"
+                app:srcCompat="@drawable/google_icon" />
+
+            <EditText
+                android:id="@+id/phoneField"
+                android:layout_width="180dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rectangle_shape"
+                android:ems="10"
+                android:inputType="phone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+            <EditText
+                android:id="@+id/passField"
+                android:layout_width="322dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/rectangle_shape"
+                android:ems="10"
+                android:inputType="textPassword"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+            <EditText
+                android:id="@+id/emailfield"
+                android:layout_width="322dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/rectangle_shape"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
