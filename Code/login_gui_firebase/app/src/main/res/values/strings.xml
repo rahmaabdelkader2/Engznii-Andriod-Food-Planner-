@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">login_gui_firebase</string>
+    <string name="app_name">Engzni</string>
     <string name="Signup">Sign Up</string>
     <string name="name" />
     <string name="nametxt">Name\n</string>
