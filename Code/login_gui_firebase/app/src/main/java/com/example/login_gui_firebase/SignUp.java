@@ -31,7 +31,6 @@ public class SignUp extends AppCompatActivity {
 
    private SharedPreferences sharedPreferences;
 
-
     private final String[][] countries = {
             {"American", "US"},
             {"British", "GB"},
@@ -183,7 +182,7 @@ public class SignUp extends AppCompatActivity {
             this.email.requestFocus();
             return false;     }
 
-        if (!isValidEmail(email)) {
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
             this.email.setError("Please enter a valid email");
             this.email.requestFocus();
             return false;
@@ -204,8 +203,6 @@ public class SignUp extends AppCompatActivity {
 
         return true;
     }
-
-
 
     private void setupCountrySpinner() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -237,7 +234,6 @@ public class SignUp extends AppCompatActivity {
         return names;
     }
 
-
     private void setupLoginRedirect() {
         TextView loginRedirect = findViewById(R.id.loginclick);
         loginRedirect.setOnClickListener(v -> {
@@ -266,9 +262,6 @@ public class SignUp extends AppCompatActivity {
         }));
     }
 
-
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -291,11 +284,4 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
-
-
-
-    private boolean isValidEmail(String email) {
-
-        return EMAIL_PATTERN.matcher(email).matches();
-    }
 }

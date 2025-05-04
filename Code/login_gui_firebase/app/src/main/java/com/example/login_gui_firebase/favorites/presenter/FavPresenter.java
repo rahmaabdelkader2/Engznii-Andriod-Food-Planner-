@@ -1,11 +1,7 @@
 package com.example.login_gui_firebase.favorites.presenter;
 
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
-
-import com.example.login_gui_firebase.favorites.view.FavFragment;
 import com.example.login_gui_firebase.favorites.view.IFavView;
 import com.example.login_gui_firebase.model.pojo.Meal;
 import com.example.login_gui_firebase.model.repo.IRepo;

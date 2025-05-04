@@ -23,11 +23,9 @@ public class OnBoardScreen3 extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.onboard3);
 
-        animationView = findViewById(R.id.animationView4);
-        start = findViewById(R.id.next3);
         onboardText3= findViewById(R.id.txtboard3);
 
-        // Start Lottie animation
+        animationView = findViewById(R.id.animationView4);
         animationView.playAnimation();
 
         start.findViewById(R.id.next3);

@@ -44,7 +44,7 @@ public class Presenter implements IPresenter ,MealCallback, MealFilteredCallback
                         meals.add(mealDetails.get(0));
                     }
 
-                    // Check if all details have been loaded
+
                     if (counter.incrementAndGet() == filteredMeals.size()) {
                         if (!meals.isEmpty()) {
                             view.showMealsByArea(meals);

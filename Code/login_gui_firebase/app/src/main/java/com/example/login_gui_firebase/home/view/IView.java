@@ -1,7 +1,5 @@
 package com.example.login_gui_firebase.home.view;
 
-
-import com.example.login_gui_firebase.model.pojo.FilteredMeal;
 import com.example.login_gui_firebase.model.pojo.Meal;
 
 import java.util.List;

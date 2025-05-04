@@ -32,7 +32,6 @@ public class Repo implements IRepo {
         return instance;
     }
 
-    // Remote data operations
     @Override
     public void getRandomMeal(MealCallback callback) {
         client.getRandomMeal(callback);
@@ -73,7 +72,6 @@ public class Repo implements IRepo {
         client.getMealDetails(mealId, callback);
     }
 
-    // Local data operations
     @Override
     public LiveData<List<Meal>> getFavouriteMeals(String userId) {
         return localDataSource.getFavouriteMeals(userId);
@@ -99,8 +97,6 @@ public class Repo implements IRepo {
     public void deleteMeal(Meal meal, String userId) {
         localDataSource.deleteMeal(meal, userId);
     }
-
-    // Meal scheduling operations
     @Override
     public void scheduleMeal(String mealId, String date, String userId) {
         localDataSource.scheduleMeal(mealId, date, userId);

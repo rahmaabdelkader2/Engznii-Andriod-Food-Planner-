@@ -26,7 +26,7 @@ public class IngredientsAdaptor extends RecyclerView.Adapter<IngredientsAdaptor.
     @Override
     public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_meal_card, parent, false); // Using your existing meal card layout
+                .inflate(R.layout.item_meal_card, parent, false);
         return new IngredientViewHolder(view);
     }
 
@@ -34,14 +34,10 @@ public class IngredientsAdaptor extends RecyclerView.Adapter<IngredientsAdaptor.
     public void onBindViewHolder(@NonNull IngredientViewHolder holder, int position) {
         IngredientItem item = ingredientItems.get(position);
 
-        // Set the ingredient name as the main text
         holder.itemName.setText(item.getName());
 
-
-        // Use area field for the measurement
         holder.itemArea.setText(item.getMeasure());
 
-        // Load ingredient image
         Glide.with(holder.itemView.getContext())
                 .load("https://www.themealdb.com/images/ingredients/" + item.getName() + "-Small.png")
                 .placeholder(R.drawable.image_placeholder)

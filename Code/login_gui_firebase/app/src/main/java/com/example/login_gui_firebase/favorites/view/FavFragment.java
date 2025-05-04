@@ -46,13 +46,13 @@ public class FavFragment extends Fragment implements IFavView,OnFavouriteMealCli
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
 
-        // Initialize SharedPreferences
         sharedPreferences = requireActivity().getSharedPreferences("UserPref", getContext().MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", "def");
 
         initializeViews(view);
         setupRecyclerView();
         setupPresenter();
+
         LiveData<List<Meal>> mealsLiveData = presenter.getFavouriteMeals(userId);
         mealsLiveData.observe(getViewLifecycleOwner(), meals -> {
             if (meals != null && !meals.isEmpty()) {
@@ -95,13 +95,6 @@ public class FavFragment extends Fragment implements IFavView,OnFavouriteMealCli
 
     public void refreshFavorites() {
         presenter.getFavouriteMeals(userId);
-    }
-
-    @Override
-    public void showFavouriteMeals(List<Meal> meals) {
-        if (meals != null && !meals.isEmpty()) {
-            mealAdapter.updateMeals(meals);
-        }
     }
 
 

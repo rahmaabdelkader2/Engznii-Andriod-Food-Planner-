@@ -1,6 +1,5 @@
 package com.example.login_gui_firebase.home.view;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

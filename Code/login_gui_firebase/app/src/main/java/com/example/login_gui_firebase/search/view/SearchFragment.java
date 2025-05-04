@@ -54,7 +54,7 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_search_activty, container, false);
+        View view = inflater.inflate(R.layout.search_activty, container, false);
 
         initializeViews(view);
         setupPresenter();
@@ -84,7 +84,6 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
         IRepo repository = Repo.getInstance(localDataSource, client);
         searchPresenter = new SearchPresenter(this, repository);
     }
-
     private void setupAdapters() {
         adapter = new SearchAdaptor(new ArrayList<>(), this);
         filteredMealAdapter = new FilteredMealAdaptor(new ArrayList<>(), this);
@@ -92,8 +91,6 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
-
-    // Update your button listeners to check connection:
     private void setupButtonListeners(View view) {
         Button btnCategories = view.findViewById(R.id.btn_categories);
         Button btnAreas = view.findViewById(R.id.btn_areas);
@@ -132,7 +129,6 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
             }
         });
     }
-
     private void setupSearchView(View view) {
         SearchView searchView = view.findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -158,7 +154,6 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
             }
         });
     }
-
     private void showMealFragment(String mealId) {
         recyclerView.setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
@@ -176,7 +171,6 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
                 .addToBackStack("meal_details")
                 .commit();
     }
-
     private void filterItems(String query) {
         if (recyclerView.getAdapter() == adapter) {
             // Search within categories/areas/ingredients (existing code)
@@ -213,7 +207,6 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
             }
         }
     }
-
     @Override
     public void showCategories(List<Categories> categories) {
         currentItems = new ArrayList<>(categories);
@@ -222,22 +215,18 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
         recyclerView.setVisibility(View.VISIBLE);
         fragmentContainer.setVisibility(View.GONE);
     }
-
-
     @Override
     public void showAreas(List<Area> areas) {
         currentItems = new ArrayList<>(areas);
         adapter.setItems(currentItems);
         recyclerView.setAdapter(adapter);
     }
-
     @Override
     public void showIngredients(List<Ingredients> ingredients) {
         currentItems = new ArrayList<>(ingredients);
         adapter.setItems(currentItems);
         recyclerView.setAdapter(adapter);
     }
-
     @Override
     public void showFilteredMeals(List<FilteredMeal> meals) {
         originalFilteredMeals = new ArrayList<>(meals);
@@ -246,12 +235,10 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
         recyclerView.setVisibility(View.VISIBLE);
         fragmentContainer.setVisibility(View.GONE);
     }
-
     @Override
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
-
     public boolean onBackSearchPressed() {
         if (fragmentContainer.getVisibility() == View.VISIBLE) {
             getChildFragmentManager().popBackStack();
@@ -261,28 +248,22 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
         }
         return false;
     }
-
     @Override
     public void onCategoryClick(Categories category) {
         searchPresenter.filterByCategory(category.getStrCategory());
     }
-
     @Override
     public void onAreaClick(Area area) {
         searchPresenter.filterByAreas(area.getStrArea());
     }
-
     @Override
     public void onIngredientClick(Ingredients ingredient) {
         searchPresenter.filterByIngredients(ingredient.getStrIngredient());
     }
-
     @Override
     public void onFilteredMealClick(String mealId) {
         showMealFragment(mealId);
     }
-
-
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);

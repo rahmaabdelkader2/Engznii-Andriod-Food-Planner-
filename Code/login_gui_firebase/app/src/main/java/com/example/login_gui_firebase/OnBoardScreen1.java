@@ -21,19 +21,15 @@ public class OnBoardScreen1 extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.onboard1);
 
-
-        animationView = findViewById(R.id.animationView4);
-        nextButton = findViewById(R.id.next3);
         onboardText = findViewById(R.id.txtboard3);
 
-        // Start Lottie animation
+        animationView = findViewById(R.id.animationView4);
         animationView.playAnimation();
 
-        // Set click listener for the button
+        nextButton = findViewById(R.id.next3);
         nextButton.setOnClickListener(view -> {
             Intent intent = new Intent(OnBoardScreen1.this, OnBoardScreen2.class);
             startActivity(intent);
-            //overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
     }
 

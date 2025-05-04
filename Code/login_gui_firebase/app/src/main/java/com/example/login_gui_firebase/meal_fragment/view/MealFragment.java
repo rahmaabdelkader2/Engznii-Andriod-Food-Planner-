@@ -46,10 +46,9 @@ import java.util.Locale;
 public class MealFragment extends Fragment implements IMealFragmentView{
     private static final String ARG_MEAL_ID = "meal_id";
     private static final String ARG_SELECTED_DATE = "selected_date";
-
     private ImageView mealImage, calendarIcon, favoriteIcon;
     private TextView mealName, mealCategory, mealArea, mealInstructions;
-    private LinearLayout ingredientsContainer;
+
     private WebView webView;
     private ImageView backButton;
     private String currentMealId;
@@ -75,15 +74,12 @@ public class MealFragment extends Fragment implements IMealFragmentView{
 
         sharedPreferences = requireActivity().getSharedPreferences("UserPref", getContext().MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", "def");
-        if (userId == null || userId.equals("def")) {
-            Toast.makeText(getContext(), "Please log in to favorite meals", Toast.LENGTH_SHORT).show();
-        }
-        Log.d("$$$$$$$$$$$$$$$$$$$$$$", userId);
+
         initViews(view);
         setupWebView();
         setupClickListeners();
 
-        // Initialize presenter before using it
+
         presenter = new MealFragmentPresenter(this, Repo.getInstance(LocalDataSource.getInstance(this.getContext()), Client.getInstance()));
 
         if (getArguments() != null) {
@@ -209,9 +205,6 @@ public class MealFragment extends Fragment implements IMealFragmentView{
             calendarIcon.setContentDescription("Remove from calendar");
         }
     }
-
-    // In MealFragment.java, update the toggleMealInCalendar method:
-// In MealFragment.java
     private void toggleMealInCalendar() {
         // Remove any existing observers first
         LiveData<Boolean> isScheduled = presenter.isMealScheduled(currentMealId, currentSelectedDate);
@@ -232,29 +225,24 @@ public class MealFragment extends Fragment implements IMealFragmentView{
                     }
                 }
                 updateCalendarIcon();
-                // Remove the observer after handling to prevent multiple triggers
                 isScheduled.removeObservers(getViewLifecycleOwner());
             }
         });
     }
-
     private void scheduleMealForDate(String date) {
         if (currentMeal != null) {
             presenter.scheduleMeal(currentMeal.getIdMeal(), date, userId);
         }
     }
-
     private String formatDate(int year, int month, int day) {
         return String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, day);
     }
-
     private void setupWebView() {
         webView.setWebChromeClient(new WebChromeClient());
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
     }
-
     private void loadYoutubeVideo(String youtubeUrl) {
         if (youtubeUrl != null && !youtubeUrl.isEmpty()) {
             String videoId = extractYoutubeVideoId(youtubeUrl);
@@ -326,8 +314,6 @@ public class MealFragment extends Fragment implements IMealFragmentView{
         }
         super.onDestroyView();
     }
-
-
     @Override
     public void updateUI(Meal meal) {
         currentMeal = meal;

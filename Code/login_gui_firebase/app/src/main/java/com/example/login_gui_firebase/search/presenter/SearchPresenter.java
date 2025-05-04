@@ -1,7 +1,5 @@
 package com.example.login_gui_firebase.search.presenter;
 
-import android.util.Log;
-
 import com.example.login_gui_firebase.model.pojo.*;
 import com.example.login_gui_firebase.model.repo.IRepo;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.*;
@@ -32,27 +30,21 @@ public class SearchPresenter implements ISearchPresenter, CategoriesCallback,
 
     @Override
     public void listAllIngredients() {
-        Log.d("OMARRRRR", "listAllIngredients: ");
         repository.listAllIngredients(this);
     }
 
     @Override
     public void filterByCategory(String category) {
-        Log.d("====", category);
-
         repository.filterByCategory(category,this);
     }
 
     @Override
     public void filterByIngredients(String ingredients) {
-        Log.d("====", ingredients);
         repository.filterByIngredient(ingredients, this);
     }
 
     @Override
     public void filterByAreas(String areas) {
-        Log.d("====", areas);
-
         repository.filterByArea(areas,this);
     }
 
@@ -88,13 +80,11 @@ public class SearchPresenter implements ISearchPresenter, CategoriesCallback,
 
     @Override
     public void onSuccessFilteredMeal(List<FilteredMeal> filteredMeals) {
-        Log.d("===TAG===", filteredMeals.toString());
         view.showFilteredMeals(filteredMeals);
     }
 
     @Override
     public void onFailureFilteredMeal(String errorMsg) {
-        Log.d("===========", errorMsg);
         view.showError(errorMsg);
     }
 }

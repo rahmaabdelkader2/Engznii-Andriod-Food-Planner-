@@ -5,12 +5,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class ProfilePresenter {
+public class ProfilePresenter implements IProfilePresenter{
     private IProfileView view;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    // Country data as a field in the presenter
     private final String[][] countries = {
             {"American", "US"},
             {"British", "GB"},
@@ -99,7 +98,7 @@ public class ProfilePresenter {
         }
     }
 
-    private String getCountryName(String countryCode) {
+    public String getCountryName(String countryCode) {
         for (String[] country : countries) {
             if (country[1].equals(countryCode)) {
                 return country[0];

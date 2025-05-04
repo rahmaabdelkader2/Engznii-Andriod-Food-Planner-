@@ -14,16 +14,5 @@ public class Categories {
     public String getStrCategoryDescription() {
         return strCategoryDescription; }
 
-    public void setStrCategory(String strCategory) {
-        this.strCategory = strCategory;
-    }
-
-    public void setStrCategoryThumb(String strCategoryThumb) {
-        this.strCategoryThumb = strCategoryThumb;
-    }
-
-    public void setStrCategoryDescription(String strCategoryDescription) {
-        this.strCategoryDescription = strCategoryDescription;
-    }
 
 }

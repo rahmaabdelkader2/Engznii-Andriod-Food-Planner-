@@ -34,7 +34,7 @@ public class ProfileFragment extends Fragment implements IProfileView {
     private FirebaseAuth mAuth;
     private SharedPreferences sharedPreferences;
     private static final String PREFS_NAME = "LoginPrefs";
-    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+//    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
     private View connectionLostContainer;
     private LottieAnimationView connectionLostAnimation;
     private View mainContentContainer;
@@ -43,7 +43,7 @@ public class ProfileFragment extends Fragment implements IProfileView {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_profile_activityy, container, false);
+        return inflater.inflate(R.layout.profile_activityy, container, false);
     }
 
     @Override
@@ -58,11 +58,11 @@ public class ProfileFragment extends Fragment implements IProfileView {
         checkConnection();
         setupConnectionRetryListener();
 
-        // Initialize presenter and load user data
+
         presenter = new ProfilePresenter(this);
         presenter.loadUserData();
 
-        // Load profile image from Firebase user
+
         loadFirebaseUserProfileImage();
     }
 
@@ -74,12 +74,10 @@ public class ProfileFragment extends Fragment implements IProfileView {
         countryDisplay = view.findViewById(R.id.countryDisplay);
         logout = view.findViewById(R.id.logout);
 
-        // Initialize containers
         mainContentContainer = view.findViewById(R.id.main_content_container);
         connectionLostContainer = view.findViewById(R.id.connection_lost_container);
         connectionLostAnimation = connectionLostContainer.findViewById(R.id.animationView4);
 
-        // Make sure it's initially hidden
         connectionLostContainer.setVisibility(View.GONE);
     }
 
@@ -91,7 +89,7 @@ public class ProfileFragment extends Fragment implements IProfileView {
             editor.apply();
 
             Intent intent = new Intent(requireActivity(), Login.class);
-            intent.putExtra("FROM_LOGOUT", true); // Add this line
+            intent.putExtra("FROM_LOGOUT", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             requireActivity().finishAffinity();
@@ -117,14 +115,6 @@ public class ProfileFragment extends Fragment implements IProfileView {
             phoneDisplay.setText(phone);
             countryDisplay.setText(country);
         }
-    }
-
-    @Override
-    public void loadProfileImage(String imageUrl) {
-        Glide.with(this)
-                .load(imageUrl)
-                .placeholder(R.drawable.default_profile)
-                .into(profileImage);
     }
 
     private boolean isNetworkAvailable() {

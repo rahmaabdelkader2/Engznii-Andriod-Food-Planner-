@@ -1,4 +1,3 @@
-// MealCalenderAdaptor.java
 package com.example.login_gui_firebase.calender.view;
 
 import android.view.LayoutInflater;
@@ -47,7 +46,6 @@ public class MealCalenderAdaptor extends RecyclerView.Adapter<MealCalenderAdapto
             Meal meal = meals.get(position);
             holder.bind(meal);
 
-            // Set click listener for the entire item
             holder.itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onMealClick(meal);

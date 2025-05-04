@@ -39,71 +39,67 @@ public class Login extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.login_activity);
 
+        initializeSharedPreferences();
+        checkAutoLogin();
+        initializeFirebase();
+        setupViews();
+    }
 
-        // Initialize SharedPreferences
+    private void initializeSharedPreferences() {
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-
-        // Check if coming from logout
+    }
+    private void checkAutoLogin() {
         boolean fromLogout = getIntent().getBooleanExtra("FROM_LOGOUT", false);
-
-        // Only redirect if not coming from logout
         if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false) && !fromLogout) {
             redirectToMain();
-            return;
         }
-
+    }
+    private void initializeFirebase() {
         db = FirebaseFirestore.getInstance();
-
-        mAuth= FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         firebaseHelper = new Firebase(this);
-
+    }
+    private void setupViews() {
         email = findViewById(R.id.firstnamefield);
         password = findViewById(R.id.emailfiled);
         googlebtn = findViewById(R.id.imageView);
         login = findViewById(R.id.loginbtn2);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String userEmail = email.getText().toString().trim();
-                String userPassword = password.getText().toString().trim();
-
-
-                if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)) {
-                    Toast.makeText(Login.this, "All fields are required!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                mAuth.signInWithEmailAndPassword(userEmail, userPassword)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                // Save login state
-                                sharedPreferences.edit()
-                                        .putBoolean("isSignedIn", true)
-                                        .putBoolean("isGuest", false)
-                                        .putString("userId", mAuth.getCurrentUser().getUid())
-                                        .apply();
-
-                                Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                                redirectToMain();
-                            } else {
-                                Toast.makeText(Login.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-        });
-
         TextView backText = findViewById(R.id.loginclick);
-        backText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this, SignUp.class);
-                startActivity(intent);
-            }
-        });
 
+        login.setOnClickListener(v -> handleLogin());
+        backText.setOnClickListener(v -> navigateToSignUp());
         setupGoogleButton();
     }
+    private void handleLogin() {
+        String userEmail = email.getText().toString().trim();
+        String userPassword = password.getText().toString().trim();
 
+        if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)) {
+            Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        saveLoginState();
+                        Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+                        redirectToMain();
+                    } else {
+                        Toast.makeText(this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void saveLoginState() {
+        sharedPreferences.edit()
+                .putBoolean("isSignedIn", true)
+                .putBoolean("isGuest", false)
+                .putString("userId", mAuth.getCurrentUser().getUid())
+                .apply();
+    }
+    private void navigateToSignUp() {
+        startActivity(new Intent(this, SignUp.class));
+    }
     private void setupGoogleButton() {
         googlebtn.setOnClickListener(v -> firebaseHelper.signInWithGoogle(new Firebase.AuthCallback() {
             @Override
@@ -121,16 +117,13 @@ public class Login extends AppCompatActivity {
             }
         }));
     }
-
     private void redirectToMain() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
-
     private void showErrorMessage(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

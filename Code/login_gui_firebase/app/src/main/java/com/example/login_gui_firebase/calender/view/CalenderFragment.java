@@ -184,7 +184,6 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
             mainContent.setVisibility(View.GONE);
             fragmentContainer.setVisibility(View.VISIBLE);
 
-            // Create and show the fragment
             MealFragment mealFragment = MealFragment.newInstance(mealId, currentSelectedDate);
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_containerfav, mealFragment)
@@ -196,14 +195,6 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
         }
     }
 
-    @Override
-    public void showMealsForDate(List<Meal> meals) {
-        if (meals != null && !meals.isEmpty()) {
-            mealAdapter.updateMeals(meals);
-        } else {
-            mealAdapter.updateMeals(null);
-        }
-    }
 
     @Override
     public void showError(String errorMessage) {

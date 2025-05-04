@@ -106,16 +106,13 @@ public class HomeFragment extends Fragment implements IView, OnMealClickListener
     }
 
 
-
     private void setupRecyclerViews() {
-        // Setup for random meal's country meals
 
         countryMealsAdapter = new mealsAdapter( new ArrayList<>(), this);
         countryMealsRecyclerView.setLayoutManager(new LinearLayoutManager(
                 getContext(), LinearLayoutManager.HORIZONTAL, false));
         countryMealsRecyclerView.setAdapter(countryMealsAdapter);
 
-        // Setup for user's country meals
         userCountryMealsAdapter = new mealsAdapter(new ArrayList<>(), this);
         userCountryMealsRecyclerView.setLayoutManager(new LinearLayoutManager(
                 getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -205,7 +202,7 @@ public class HomeFragment extends Fragment implements IView, OnMealClickListener
             showContentViews(false);
         }
     }
-    // Helper method to show/hide content views
+
     private void showContentViews(boolean show) {
         int visibility = show ? View.VISIBLE : View.GONE;
         randomMealImage.setVisibility(visibility);
