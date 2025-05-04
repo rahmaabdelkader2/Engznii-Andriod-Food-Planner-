@@ -1,5 +1,6 @@
 package com.example.login_gui_firebase;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,6 +28,9 @@ public class SignUp extends AppCompatActivity {
     private EditText firstName, surname, phone, email, pass;
     private ImageView googleBtn;
     private Spinner countrySpinner;
+
+   private SharedPreferences sharedPreferences;
+
 
     private final String[][] countries = {
             {"American", "US"},
@@ -73,6 +77,7 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_activity);
+        sharedPreferences = getSharedPreferences("UserPref", MODE_PRIVATE);
 
         initializeViews();
         setupFirebaseHelper();
@@ -106,6 +111,7 @@ public class SignUp extends AppCompatActivity {
         String userEmail = email.getText().toString().trim();
         String userPass = pass.getText().toString().trim();
 
+
         if (!validateInputs(userFirstName, userSurname, userPhone, userEmail, userPass)) {
             return;
         }
@@ -115,6 +121,9 @@ public class SignUp extends AppCompatActivity {
             public void onSuccess(FirebaseUser user) {
                 // est5dmt sign up . this 34an AuthCallback dah anonymous inner class , f this lw7dha ht refer l el callback
                 Toast.makeText(SignUp.this,"Registration successful!", Toast.LENGTH_SHORT).show();
+                String userId=user.getUid();
+                sharedPreferences.edit().putString("userId", userId).apply();
+
                 // clear form
                 firstName.setText("");
                 surname.setText("");
@@ -236,8 +245,11 @@ public class SignUp extends AppCompatActivity {
 
     private void setupGoogleButton() {
         googleBtn.setOnClickListener(v -> firebaseHelper.signInWithGoogle(new AuthCallback() {
+
             @Override
             public void onSuccess(FirebaseUser user) {
+                String userId=user.getUid();
+                sharedPreferences.edit().putString("userId", userId).apply();
 
                 startActivity(new Intent(SignUp.this, MainActivity.class));
                 finish();

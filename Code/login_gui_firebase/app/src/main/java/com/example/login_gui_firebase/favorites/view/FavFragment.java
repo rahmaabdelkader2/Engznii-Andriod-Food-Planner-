@@ -1,5 +1,6 @@
 package com.example.login_gui_firebase.favorites.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +25,7 @@ import com.example.login_gui_firebase.model.remote.retrofit.client.Client;
 import com.example.login_gui_firebase.model.remote.retrofit.client.IClient;
 import com.example.login_gui_firebase.model.repo.IRepo;
 import com.example.login_gui_firebase.model.repo.Repo;
-import com.example.login_gui_firebase.MealFragment;
+import com.example.login_gui_firebase.meal_fragment.view.MealFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +37,35 @@ public class FavFragment extends Fragment implements IFavView,OnFavouriteMealCli
     private View emptyView;
     private FrameLayout fragmentContainer;
 
+    private SharedPreferences  sharedPreferences;
+    private String userId;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
 
+        // Initialize SharedPreferences
+        sharedPreferences = requireActivity().getSharedPreferences("UserPref", getContext().MODE_PRIVATE);
+        userId = sharedPreferences.getString("userId", "def");
+
         initializeViews(view);
         setupRecyclerView();
         setupPresenter();
-
+        LiveData<List<Meal>> mealsLiveData = presenter.getFavouriteMeals(userId);
+        mealsLiveData.observe(getViewLifecycleOwner(), meals -> {
+            if (meals != null && !meals.isEmpty()) {
+                mealAdapter.updateMeals(meals);
+                emptyView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                fragmentContainer.setVisibility(View.GONE);
+            } else {
+                emptyView.setVisibility(View.VISIBLE);
+                fragmentContainer.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+            }
+        });
         return view;
     }
     private void initializeViews(View view) {
@@ -73,14 +94,13 @@ public class FavFragment extends Fragment implements IFavView,OnFavouriteMealCli
     }
 
     public void refreshFavorites() {
-        presenter.getFavouriteMeals();
+        presenter.getFavouriteMeals(userId);
     }
 
     @Override
     public void showFavouriteMeals(List<Meal> meals) {
         if (meals != null && !meals.isEmpty()) {
             mealAdapter.updateMeals(meals);
-
         }
     }
 
@@ -116,6 +136,7 @@ public class FavFragment extends Fragment implements IFavView,OnFavouriteMealCli
 
             return true;
         }
+
         return false;
     }
 }

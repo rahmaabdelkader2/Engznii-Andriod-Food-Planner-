@@ -18,9 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.login_gui_firebase.MealFragment;
+import com.example.login_gui_firebase.meal_fragment.view.MealFragment;
 import com.example.login_gui_firebase.R;
-import com.example.login_gui_firebase.home.presenter.Presenter;
 import com.example.login_gui_firebase.model.local.ILocalDataSource;
 import com.example.login_gui_firebase.model.local.LocalDataSource;
 import com.example.login_gui_firebase.model.pojo.Area;

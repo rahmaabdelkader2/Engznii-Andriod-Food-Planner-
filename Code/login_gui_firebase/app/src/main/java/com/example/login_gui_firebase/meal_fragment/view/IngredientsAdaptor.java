@@ -1,4 +1,4 @@
-package com.example.login_gui_firebase;
+package com.example.login_gui_firebase.meal_fragment.view;
 
 
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.login_gui_firebase.R;
 
 import java.util.List;
 public class IngredientsAdaptor extends RecyclerView.Adapter<IngredientsAdaptor.IngredientViewHolder> {

@@ -1,7 +1,9 @@
-package com.example.login_gui_firebase;
+package com.example.login_gui_firebase.meal_fragment.view;
 
 import android.app.DatePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +19,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.login_gui_firebase.R;
+import com.example.login_gui_firebase.meal_fragment.presenter.IMealFragmentPresenter;
+import com.example.login_gui_firebase.meal_fragment.presenter.MealFragmentPresenter;
+import com.example.login_gui_firebase.model.local.ILocalDataSource;
+import com.example.login_gui_firebase.model.local.LocalDataSource;
 import com.example.login_gui_firebase.model.local.MealDatabase;
 import com.example.login_gui_firebase.model.pojo.Meal;
 import com.example.login_gui_firebase.model.remote.retrofit.client.Client;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealCallback;
+import com.example.login_gui_firebase.model.repo.Repo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,7 +43,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MealFragment extends Fragment {
+public class MealFragment extends Fragment implements IMealFragmentView{
     private static final String ARG_MEAL_ID = "meal_id";
     private static final String ARG_SELECTED_DATE = "selected_date";
 
@@ -46,7 +55,9 @@ public class MealFragment extends Fragment {
     private String currentMealId;
     private String currentSelectedDate;
     private Meal currentMeal;
-
+    private SharedPreferences sharedPreferences;
+    private String userId;
+    private IMealFragmentPresenter presenter;
     public static MealFragment newInstance(String mealId, String selectedDate) {
         MealFragment fragment = new MealFragment();
         Bundle args = new Bundle();
@@ -61,15 +72,25 @@ public class MealFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meal_details, container, false);
+
+        sharedPreferences = requireActivity().getSharedPreferences("UserPref", getContext().MODE_PRIVATE);
+        userId = sharedPreferences.getString("userId", "def");
+        if (userId == null || userId.equals("def")) {
+            Toast.makeText(getContext(), "Please log in to favorite meals", Toast.LENGTH_SHORT).show();
+        }
+        Log.d("$$$$$$$$$$$$$$$$$$$$$$", userId);
         initViews(view);
         setupWebView();
         setupClickListeners();
+
+        // Initialize presenter before using it
+        presenter = new MealFragmentPresenter(this, Repo.getInstance(LocalDataSource.getInstance(this.getContext()), Client.getInstance()));
 
         if (getArguments() != null) {
             currentMealId = getArguments().getString(ARG_MEAL_ID);
             currentSelectedDate = getArguments().getString(ARG_SELECTED_DATE);
             if (currentMealId != null) {
-                fetchMealDetails(currentMealId);
+                presenter.getMealDetails(currentMealId);
                 updateCalendarIcon();
             }
         }
@@ -83,7 +104,6 @@ public class MealFragment extends Fragment {
         mealCategory = view.findViewById(R.id.mealCategory);
         mealArea = view.findViewById(R.id.mealArea);
         mealInstructions = view.findViewById(R.id.mealInstructions);
-       // ingredientsContainer = view.findViewById(R.id.ingredientsContainer);
         webView = view.findViewById(R.id.webview);
         backButton = view.findViewById(R.id.btn_back);
         calendarIcon = view.findViewById(R.id.addtocal);
@@ -106,6 +126,7 @@ public class MealFragment extends Fragment {
         });
 
         favoriteIcon.setOnClickListener(v -> {
+
             if (currentMeal != null) {
                 toggleFavoriteStatus();
             }
@@ -116,19 +137,13 @@ public class MealFragment extends Fragment {
         boolean newFavoriteStatus = !currentMeal.isFavorite();
         currentMeal.setFavorite(newFavoriteStatus);
         updateFavoriteIcon(newFavoriteStatus);
-
-        new Thread(() -> {
-            MealDatabase database = MealDatabase.getInstance(requireContext());
-            database.MealDAO().setFavoriteStatus(currentMeal.getIdMeal(), newFavoriteStatus);
-            requireActivity().runOnUiThread(() -> {
-                String message = newFavoriteStatus ? "Added to favorites" : "Removed from favorites";
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-            });
-        }).start();
+        presenter.insertMeal(currentMeal, userId);
+        presenter.setFavoriteStatus(currentMeal.getIdMeal(), newFavoriteStatus, userId);
+        String message = newFavoriteStatus ? "Added to favorites" : "Removed from favorites";
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void updateFavoriteIcon(boolean isFavorite) {
-        // Change both icon and color
         int iconRes = isFavorite ? R.drawable.fav2 : R.drawable.fav;
         int colorRes = isFavorite ? R.color.secondary_color : R.color.secondary_color;
 
@@ -195,33 +210,38 @@ public class MealFragment extends Fragment {
         }
     }
 
+    // In MealFragment.java, update the toggleMealInCalendar method:
+// In MealFragment.java
     private void toggleMealInCalendar() {
-        MealDatabase database = MealDatabase.getInstance(requireContext());
-        new Thread(() -> {
-            boolean isScheduled = database.MealDAO().isMealScheduled(currentMealId, currentSelectedDate) > 0;
+        // Remove any existing observers first
+        LiveData<Boolean> isScheduled = presenter.isMealScheduled(currentMealId, currentSelectedDate);
+        isScheduled.removeObservers(getViewLifecycleOwner());
 
-            if (isScheduled) {
-                database.MealDAO().unscheduleMeal(currentMealId);
-                currentSelectedDate = null;
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Meal removed from calendar", Toast.LENGTH_SHORT).show();
-                    updateCalendarIcon();
-                });
-            } else {
-                database.MealDAO().scheduleMeal(currentMealId, currentSelectedDate);
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Meal added to calendar", Toast.LENGTH_SHORT).show();
-                    updateCalendarIcon();
-                });
+        isScheduled.observe(getViewLifecycleOwner(), scheduled -> {
+            if (scheduled != null) {
+                if (scheduled) {
+                    presenter.unscheduleMeal(currentMealId, userId);
+                    currentSelectedDate = null;
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Meal removed from calendar", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    presenter.scheduleMeal(currentMealId, currentSelectedDate, userId);
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Meal added to calendar", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                updateCalendarIcon();
+                // Remove the observer after handling to prevent multiple triggers
+                isScheduled.removeObservers(getViewLifecycleOwner());
             }
-        }).start();
+        });
     }
 
     private void scheduleMealForDate(String date) {
-        MealDatabase database = MealDatabase.getInstance(requireContext());
-        new Thread(() -> {
-            database.MealDAO().scheduleMeal(currentMealId, date);
-        }).start();
+        if (currentMeal != null) {
+            presenter.scheduleMeal(currentMeal.getIdMeal(), date, userId);
+        }
     }
 
     private String formatDate(int year, int month, int day) {
@@ -233,59 +253,6 @@ public class MealFragment extends Fragment {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
-    }
-
-    private void fetchMealDetails(String mealId) {
-        Client.getInstance().getMealDetails(mealId, new MealCallback() {
-            @Override
-            public void onSuccess_meal(List<Meal> meals) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        if (meals != null && !meals.isEmpty()) {
-                            currentMeal = meals.get(0);
-                            updateUI(currentMeal);
-                            checkFavoriteStatus();
-                        } else {
-                            Toast.makeText(getContext(), "No meal details found", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure_meal(String errorMsg) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() ->
-                            Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show()
-                    );
-                }
-            }
-        });
-    }
-
-    private void checkFavoriteStatus() {
-        new Thread(() -> {
-            MealDatabase database = MealDatabase.getInstance(requireContext());
-            boolean isFavorite = database.MealDAO().isFavorite(currentMeal.getIdMeal());
-            requireActivity().runOnUiThread(() -> {
-                currentMeal.setFavorite(isFavorite);
-                updateFavoriteIcon(isFavorite);
-            });
-        }).start();
-    }
-
-    private void updateUI(Meal meal) {
-        mealName.setText(meal.getStrMeal());
-        mealCategory.setText("Category: " + meal.getStrCategory());
-        mealArea.setText("Origin: " + meal.getStrArea());
-        mealInstructions.setText(meal.getStrInstructions());
-
-        Glide.with(this)
-                .load(meal.getStrMealThumb())
-                .into(mealImage);
-
-        setupIngredientsRecyclerView(meal);
-        loadYoutubeVideo(meal.getStrYoutube());
     }
 
     private void loadYoutubeVideo(String youtubeUrl) {
@@ -321,6 +288,7 @@ public class MealFragment extends Fragment {
         }
         return videoId;
     }
+
     private void setupIngredientsRecyclerView(Meal meal) {
         List<IngredientsAdaptor.IngredientItem> ingredientItems = new ArrayList<>();
 
@@ -357,5 +325,40 @@ public class MealFragment extends Fragment {
             webView.destroy();
         }
         super.onDestroyView();
+    }
+
+
+    @Override
+    public void updateUI(Meal meal) {
+        currentMeal = meal;
+        currentMeal.setUserId(userId);
+        mealName.setText(meal.getStrMeal());
+        mealCategory.setText("Category: " + meal.getStrCategory());
+        mealArea.setText("Origin: " + meal.getStrArea());
+        mealInstructions.setText(meal.getStrInstructions());
+
+        // Observe favorite status
+        LiveData<Boolean> isFavoriteLiveData = presenter.isFavorite(meal.getIdMeal(), userId);
+        isFavoriteLiveData.observe(getViewLifecycleOwner(), isFavorite -> {
+            if (isFavorite != null) {
+                meal.setFavorite(isFavorite);
+                updateFavoriteIcon(isFavorite);
+            } else {
+                // Default to false if no favorite status found
+                meal.setFavorite(false);
+                updateFavoriteIcon(false);
+            }
+        });
+
+        Glide.with(this)
+                .load(meal.getStrMealThumb())
+                .into(mealImage);
+
+        setupIngredientsRecyclerView(meal);
+        loadYoutubeVideo(meal.getStrYoutube());
+    }
+    @Override
+    public void showError(String error) {
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 }

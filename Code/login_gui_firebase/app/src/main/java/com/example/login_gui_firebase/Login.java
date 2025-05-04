@@ -3,6 +3,7 @@ package com.example.login_gui_firebase;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.login_gui_firebase.model.remote.authentication.Firebase;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,8 +28,9 @@ public class Login extends AppCompatActivity {
     Button login;
     ImageView googlebtn;
     private Firebase firebaseHelper;
+    private FirebaseAuth mAuth;
     private SharedPreferences sharedPreferences;
-    private static final String PREFS_NAME = "LoginPref";
+    private static final String PREFS_NAME = "UserPref";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 
     @Override
@@ -36,16 +39,22 @@ public class Login extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.login_activity);
 
+
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
-        // Check if user is already logged in
-        if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)) {
-            redirectToHome();
+        // Check if coming from logout
+        boolean fromLogout = getIntent().getBooleanExtra("FROM_LOGOUT", false);
+
+        // Only redirect if not coming from logout
+        if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false) && !fromLogout) {
+            redirectToMain();
             return;
         }
 
         db = FirebaseFirestore.getInstance();
+
+        mAuth= FirebaseAuth.getInstance();
         firebaseHelper = new Firebase(this);
 
         email = findViewById(R.id.firstnamefield);
@@ -58,42 +67,25 @@ public class Login extends AppCompatActivity {
                 String userEmail = email.getText().toString().trim();
                 String userPassword = password.getText().toString().trim();
 
-                if (userEmail.isEmpty() || userPassword.isEmpty()) {
-                    Toast.makeText(Login.this, "Please enter both email and password", Toast.LENGTH_SHORT).show();
+
+                if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)) {
+                    Toast.makeText(Login.this, "All fields are required!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // Check user credentials in Firestore
-                db.collection("users")
-                        .document(userEmail)  // Using email as document ID
-                        .get()
+                mAuth.signInWithEmailAndPassword(userEmail, userPassword)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    // User exists, verify password
-                                    String storedPassword = document.getString("password");
-                                    if (storedPassword != null && storedPassword.equals(userPassword)) {
-                                        // Login successful
-                                        // Save login state
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putBoolean(KEY_IS_LOGGED_IN, true);
-                                        editor.apply();
+                                // Save login state
+                                sharedPreferences.edit()
+                                        .putBoolean("isSignedIn", true)
+                                        .putBoolean("isGuest", false)
+                                        .putString("userId", mAuth.getCurrentUser().getUid())
+                                        .apply();
 
-                                        Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(Login.this, MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    } else {
-                                        // Wrong password
-                                        Toast.makeText(Login.this, "Incorrect password", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    // User doesn't exist
-                                    Toast.makeText(Login.this, "User not found", Toast.LENGTH_SHORT).show();
-                                }
+                                Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                redirectToMain();
                             } else {
-                                // Error accessing database
                                 Toast.makeText(Login.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -120,7 +112,7 @@ public class Login extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean(KEY_IS_LOGGED_IN, true);
                 editor.apply();
-                redirectToHome();
+                redirectToMain();
             }
 
             @Override
@@ -130,7 +122,7 @@ public class Login extends AppCompatActivity {
         }));
     }
 
-    private void redirectToHome() {
+    private void redirectToMain() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
@@ -152,7 +144,7 @@ public class Login extends AppCompatActivity {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean(KEY_IS_LOGGED_IN, true);
                     editor.apply();
-                    redirectToHome();
+                    redirectToMain();
                 }
 
                 @Override

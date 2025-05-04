@@ -1,8 +1,12 @@
 package com.example.login_gui_firebase.model.remote.authentication;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.login_gui_firebase.R;
@@ -98,17 +102,43 @@ public class Firebase {
                 });
     }
 
+    // In your Firebase class, modify the handleGoogleSignInResult method
     public void handleGoogleSignInResult(Task<GoogleSignInAccount> task, AuthCallback callback) {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
-            if (account != null) {
-                firebaseAuthWithGoogle(account.getIdToken(), callback);
-            }
+            AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+
+            mAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            // Save Google user data to Firestore
+                            saveGoogleUserData(account, user.getUid());
+
+                            callback.onSuccess(user);
+                        } else {
+                            callback.onFailure(task1.getException().getMessage());
+                        }
+                    });
         } catch (ApiException e) {
-            callback.onFailure("Google Sign-In failed: " + e.getMessage());
+            callback.onFailure(e.getMessage());
         }
     }
 
+    private void saveGoogleUserData(GoogleSignInAccount account, String uid) {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("firstName", account.getGivenName());
+        userData.put("lastName", account.getFamilyName());
+        userData.put("email", account.getEmail());
+        userData.put("photoUrl", account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "");
+
+        // Save to Firestore
+        db.collection("users").document(uid)
+                .set(userData)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Google user data saved"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error saving Google user data", e));
+    }
     private void firebaseAuthWithGoogle(String idToken, AuthCallback callback) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)

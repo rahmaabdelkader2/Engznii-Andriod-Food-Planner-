@@ -9,9 +9,15 @@ import java.util.List;
 public interface ILocalDataSource {
     LiveData<List<Meal>> getAllMeals();
     void insertMeal(Meal meal);
-    void deleteMeal(Meal meal);
+    void deleteMeal(Meal meal, String userId);
+    void scheduleMeal(String mealId, String date,String userId);
+    void unscheduleMeal(String mealId,String userId);
+    LiveData<List<Meal>> getMealsForDate(String date,String userId);
+    LiveData<Boolean> isMealScheduled(String mealId, String date);
 
-    LiveData<List<Meal>> getFavoriteMeals();
-    void setFavoriteStatus(Meal meal, boolean isFavorite);
-    boolean isFavorite(String mealId);
+    LiveData<List<Meal>> getFavouriteMeals(String userId);
+    void setFavoriteStatus(String mealId, boolean isFavorite, String userId);
+    LiveData<Boolean> isFavorite(String mealId, String userId);
+
+
 }

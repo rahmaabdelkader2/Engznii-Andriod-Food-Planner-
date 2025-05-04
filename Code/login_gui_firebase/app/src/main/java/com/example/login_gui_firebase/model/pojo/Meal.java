@@ -1,14 +1,20 @@
 package com.example.login_gui_firebase.model.pojo;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "mealdb")
+@Entity(tableName = "mealdb",primaryKeys = {"idMeal","userId"})
 public class Meal {
-    @PrimaryKey
+
     @NonNull
+    @ColumnInfo(name = "idMeal")
     private String idMeal;
+    @NonNull
+    @ColumnInfo(name = "userId")
+    private String userId;
+
     private String strMeal;
     private String strMealAlternate;
     private String strCategory;
@@ -68,7 +74,7 @@ public class Meal {
     private String strMeasure20;
 
     private String scheduledDate;
-
+    @ColumnInfo(name = "isFavorite", defaultValue = "0")
     private boolean isFavorite;
 
     // Add getter and setter for isFavorite
@@ -91,6 +97,17 @@ public class Meal {
     public String getIdMeal() {
         return idMeal;
     }
+
+
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(@NonNull String userId) {
+        this.userId = userId;
+    }
+
 
     public void setIdMeal(String idMeal) {
         this.idMeal = idMeal;
@@ -575,5 +592,6 @@ public class Meal {
         this.strMeasure20 = strMeasure20;
         this.scheduledDate=scheduledDate;
         this.isFavorite=isFavorite;
+
     }
 }

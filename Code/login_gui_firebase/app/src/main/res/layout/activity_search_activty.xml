@@ -67,6 +67,7 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         android:background="@color/white"/>
+
     <include layout="@layout/connection_lost"
         android:visibility="gone"
         android:id="@+id/connection_lost_container"/>

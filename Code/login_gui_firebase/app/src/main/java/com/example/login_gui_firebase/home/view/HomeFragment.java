@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.login_gui_firebase.MealFragment;
+import com.example.login_gui_firebase.meal_fragment.view.MealFragment;
 import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.home.presenter.IPresenter;
 import com.example.login_gui_firebase.home.presenter.Presenter;
@@ -194,7 +194,7 @@ public class HomeFragment extends Fragment implements IView, OnMealClickListener
     }
 
     private void loadData() {
-        presenter.getRandomMeal();
+        //presenter.getRandomMeal();
         if (isNetworkAvailable()) {
             connectionLostContainer.setVisibility(View.GONE);
             showContentViews(true);

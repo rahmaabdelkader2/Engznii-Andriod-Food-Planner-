@@ -4,9 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.login_gui_firebase.model.local.ILocalDataSource;
-import com.example.login_gui_firebase.model.pojo.Area;
-import com.example.login_gui_firebase.model.pojo.Categories;
-import com.example.login_gui_firebase.model.pojo.Ingredients;
 import com.example.login_gui_firebase.model.pojo.Meal;
 import com.example.login_gui_firebase.model.remote.retrofit.client.IClient;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.AreaCallback;
@@ -15,7 +12,6 @@ import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.Ing
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealCallback;
 import com.example.login_gui_firebase.model.remote.retrofit.networkcallbacks.MealFilteredCallback;
 
-import java.util.Collections;
 import java.util.List;
 
 public class Repo implements IRepo {
@@ -36,6 +32,7 @@ public class Repo implements IRepo {
         return instance;
     }
 
+    // Remote data operations
     @Override
     public void getRandomMeal(MealCallback callback) {
         client.getRandomMeal(callback);
@@ -71,34 +68,56 @@ public class Repo implements IRepo {
         client.filterByIngredient(ingredient, callback);
     }
 
-
     @Override
     public void getMealDetails(String mealId, MealCallback callback) {
         client.getMealDetails(mealId, callback);
     }
+
+    // Local data operations
     @Override
-    public LiveData<List<Meal>> getFavoriteMeals() {
-        return localDataSource.getFavoriteMeals();
+    public LiveData<List<Meal>> getFavouriteMeals(String userId) {
+        return localDataSource.getFavouriteMeals(userId);
     }
 
     @Override
-    public void setFavoriteStatus(Meal meal, boolean isFavorite) {
-        localDataSource.setFavoriteStatus(meal, isFavorite);
+    public void setFavoriteStatus(String mealId, boolean isFavorite, String userId) {
+        localDataSource.setFavoriteStatus(mealId, isFavorite, userId);
     }
 
     @Override
-    public boolean isFavorite(String mealId) {
-        return localDataSource.isFavorite(mealId);
+    public LiveData<Boolean> isFavorite(String mealId, String userId) {
+        return localDataSource.isFavorite(mealId, userId);
     }
 
     @Override
-    public void insertMeal(Meal meal) {
+    public void insertMeal(Meal meal, String userId) {
+        meal.setUserId(userId);
         localDataSource.insertMeal(meal);
     }
 
     @Override
-    public void deleteMeal(Meal meal) {
-        localDataSource.deleteMeal(meal);
+    public void deleteMeal(Meal meal, String userId) {
+        localDataSource.deleteMeal(meal, userId);
     }
 
+    // Meal scheduling operations
+    @Override
+    public void scheduleMeal(String mealId, String date, String userId) {
+        localDataSource.scheduleMeal(mealId, date, userId);
+    }
+
+    @Override
+    public void unscheduleMeal(String mealId, String userId) {
+        localDataSource.unscheduleMeal(mealId, userId);
+    }
+
+    @Override
+    public LiveData<List<Meal>> getMealsForDate(String date, String userId) {
+        return localDataSource.getMealsForDate(date, userId);
+    }
+
+    @Override
+    public LiveData<Boolean> isMealScheduled(String mealId, String date) {
+        return localDataSource.isMealScheduled(mealId, date);
+    }
 }

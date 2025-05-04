@@ -5,7 +5,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import com.example.login_gui_firebase.model.pojo.Meal;
 
@@ -19,36 +18,28 @@ public interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMeal(Meal meal);
 
-    @Query("DELETE FROM mealdb WHERE idMeal = :idMeal")
-    void deleteMeal(String idMeal);
+    @Query("DELETE FROM mealdb WHERE idMeal = :idMeal AND userId = :userId")
+    void deleteMeal(String idMeal, String userId);
 
-    // Scheduled meals functionality
-//    @Update
-//    void updateMeal(Meal meal);
+    @Query("UPDATE mealdb SET scheduledDate = :date WHERE idMeal = :mealId AND userId = :userId")
+    void scheduleMeal(String mealId, String date, String userId);
 
-    @Query("UPDATE mealdb SET scheduledDate = :date WHERE idMeal = :mealId")
-    void scheduleMeal(String mealId, String date);
+    @Query("UPDATE mealdb SET scheduledDate = NULL WHERE idMeal = :mealId AND userId = :userId")
+    void unscheduleMeal(String mealId,String userId);
 
-    @Query("UPDATE mealdb SET scheduledDate = NULL WHERE idMeal = :mealId")
-    void unscheduleMeal(String mealId);
-
-    @Query("SELECT * FROM mealdb WHERE scheduledDate = :date")
-    LiveData<List<Meal>> getMealsForDate(String date);
-
-    @Query("SELECT scheduledDate FROM mealdb WHERE idMeal = :mealId")
-    String getScheduledDateForMeal(String mealId);
+    @Query("SELECT * FROM mealdb WHERE scheduledDate = :date AND userId = :userId")
+    LiveData<List<Meal>> getMealsForDate(String date,String userId);
 
     @Query("SELECT COUNT(*) FROM mealdb WHERE idMeal = :mealId AND scheduledDate = :date")
-    int isMealScheduled(String mealId, String date);
+    LiveData<Boolean>  isMealScheduled(String mealId, String date);
     // Add these for favorites
-    @Query("SELECT * FROM mealdb WHERE isFavorite = 1")
-    LiveData<List<Meal>> getFavoriteMeals();
+    @Query("SELECT * FROM mealdb WHERE isFavorite = 1 AND userId = :userId")
+    LiveData<List<Meal>> getFavoriteMeals(String userId);
 
-    @Query("UPDATE mealdb SET isFavorite = :isFavorite WHERE idMeal = :mealId")
-    void setFavoriteStatus(String mealId, boolean isFavorite);
+    @Query("UPDATE mealdb SET isFavorite = :isFavorite WHERE idMeal = :mealId AND userId = :userId")
+    void setFavoriteStatus(String mealId, boolean isFavorite, String userId);
 
-    @Query("SELECT isFavorite FROM mealdb WHERE idMeal = :mealId")
-    boolean isFavorite(String mealId);
-
+    @Query("SELECT isFavorite FROM mealdb WHERE idMeal = :mealId AND userId = :userId")
+    LiveData<Boolean>  isFavorite(String mealId, String userId);
 
 }

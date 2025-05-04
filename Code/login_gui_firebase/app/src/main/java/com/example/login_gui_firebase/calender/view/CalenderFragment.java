@@ -1,5 +1,6 @@
 package com.example.login_gui_firebase.calender.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,11 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.login_gui_firebase.MealFragment;
+import com.example.login_gui_firebase.meal_fragment.view.MealFragment;
 import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.calender.presenter.CalenderPresenter;
 import com.example.login_gui_firebase.calender.presenter.ICalenderPresenter;
@@ -41,6 +43,8 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
     private RecyclerView mealsRecyclerView;
     private MealCalenderAdaptor mealAdapter;
     private String currentSelectedDate;
+    private SharedPreferences   sharedPreferences;
+    private String userId;
 
     @Nullable
     @Override
@@ -50,6 +54,9 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
         calendarView = view.findViewById(R.id.calendarView);
         selectedDateTextView = view.findViewById(R.id.selectedDateTextView);
         mealsRecyclerView = view.findViewById(R.id.mealsRecyclerView);
+        sharedPreferences = requireActivity().getSharedPreferences("UserPref", getContext().MODE_PRIVATE);
+        userId = sharedPreferences.getString("userId", "def");
+
 
         setupRecyclerView();
         setupPresenter();
@@ -83,7 +90,18 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             currentSelectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
             updateDateDisplay(currentSelectedDate);
-            presenter.getMealsForDate(currentSelectedDate);
+
+            // Refresh data when date changes
+            LiveData<List<Meal>> mealsLiveData = presenter.getMealsForDate(currentSelectedDate, userId);
+            mealsLiveData.observe(getViewLifecycleOwner(), meals -> {
+                if (meals != null && !meals.isEmpty()) {
+                    mealAdapter.updateMeals(meals);
+                    mealsRecyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    mealAdapter.updateMeals(new ArrayList<>());
+                    mealsRecyclerView.setVisibility(View.GONE);
+                }
+            });
         });
     }
 
@@ -108,7 +126,19 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         currentSelectedDate = today;
         updateDateDisplay(today);
-        presenter.getMealsForDate(today);
+        presenter.getMealsForDate(today, userId);
+
+        // Now this is safe because presenter is initialized
+        LiveData<List<Meal>> mealsLiveData = presenter.getMealsForDate(currentSelectedDate, userId);
+        mealsLiveData.observe(getViewLifecycleOwner(), meals -> {
+            if (meals != null && !meals.isEmpty()) {
+                mealAdapter.updateMeals(meals);
+                mealsRecyclerView.setVisibility(View.VISIBLE);
+            } else {
+                mealAdapter.updateMeals(new ArrayList<>());
+                mealsRecyclerView.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void updateDateDisplay(String date) {
@@ -132,14 +162,13 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
     private void showMealFragment(String mealId) {
         try {
             if (!isDateWithinAllowedRange(currentSelectedDate)) {
-                showError("You can only plan meals for today and the next 7 days");
                 return;
             }
 
             // Safely get the root view
             View rootView = getView();
             if (rootView == null) {
-                showError("Fragment view not ready");
+
                 return;
             }
 
@@ -148,7 +177,6 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
             View fragmentContainer = rootView.findViewById(R.id.fragment_containerfav);
 
             if (mainContent == null || fragmentContainer == null) {
-                showError("Layout configuration error");
                 return;
             }
 
@@ -164,7 +192,6 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
                     .commit();
 
         } catch (Exception e) {
-            showError("Error showing meal details: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -216,7 +243,17 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
         if (isDateWithinAllowedRange(currentSelectedDate)) {
             showMealFragment(meal.getIdMeal());
         } else {
-            showError("You can only plan meals for today and the next 7 days");
         }
+    }
+    // Add this method to handle back navigation
+    public boolean onBackPressed() {
+        View fragmentContainer = getView().findViewById(R.id.fragment_containerfav);
+        if (fragmentContainer != null && fragmentContainer.getVisibility() == View.VISIBLE) {
+            getParentFragmentManager().popBackStack();
+            fragmentContainer.setVisibility(View.GONE);
+            getView().findViewById(R.id.main_content).setVisibility(View.VISIBLE);
+            return true;
+        }
+        return false;
     }
 }

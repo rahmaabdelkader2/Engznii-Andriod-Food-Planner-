@@ -3,6 +3,8 @@ package com.example.login_gui_firebase.profile.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +18,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.bumptech.glide.Glide;
 import com.example.login_gui_firebase.Login;
 import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.profile.presenter.ProfilePresenter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment implements IProfileView {
     private TextView fullNameDisplay, emailDisplay, phoneDisplay, countryDisplay;
@@ -30,6 +35,9 @@ public class ProfileFragment extends Fragment implements IProfileView {
     private SharedPreferences sharedPreferences;
     private static final String PREFS_NAME = "LoginPrefs";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    private View connectionLostContainer;
+    private LottieAnimationView connectionLostAnimation;
+    private View mainContentContainer;
 
     @Nullable
     @Override
@@ -45,7 +53,20 @@ public class ProfileFragment extends Fragment implements IProfileView {
         mAuth = FirebaseAuth.getInstance();
         sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        // Initialize views
+        initializeViews(view);
+        setupLogoutButton();
+        checkConnection();
+        setupConnectionRetryListener();
+
+        // Initialize presenter and load user data
+        presenter = new ProfilePresenter(this);
+        presenter.loadUserData();
+
+        // Load profile image from Firebase user
+        loadFirebaseUserProfileImage();
+    }
+
+    private void initializeViews(View view) {
         profileImage = view.findViewById(R.id.imageView7);
         fullNameDisplay = view.findViewById(R.id.firstnameDisplay);
         emailDisplay = view.findViewById(R.id.emailDisplay);
@@ -53,30 +74,39 @@ public class ProfileFragment extends Fragment implements IProfileView {
         countryDisplay = view.findViewById(R.id.countryDisplay);
         logout = view.findViewById(R.id.logout);
 
-        // Set up logout button
-        logout.setOnClickListener(v -> {
-            // Sign out from Firebase
-            mAuth.signOut();
+        // Initialize containers
+        mainContentContainer = view.findViewById(R.id.main_content_container);
+        connectionLostContainer = view.findViewById(R.id.connection_lost_container);
+        connectionLostAnimation = connectionLostContainer.findViewById(R.id.animationView4);
 
-            // Clear the login state from SharedPreferences
+        // Make sure it's initially hidden
+        connectionLostContainer.setVisibility(View.GONE);
+    }
+
+    private void setupLogoutButton() {
+        logout.setOnClickListener(v -> {
+            mAuth.signOut();
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(KEY_IS_LOGGED_IN, false);
+            editor.clear();
             editor.apply();
 
-            // Redirect to Login activity
-            Intent intent = new Intent(getActivity(), Login.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new Intent(requireActivity(), Login.class);
+            intent.putExtra("FROM_LOGOUT", true); // Add this line
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-
-            // Finish the current activity if it exists
-            if (getActivity() != null) {
-                getActivity().finish();
-            }
+            requireActivity().finishAffinity();
+            Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
         });
+    }
 
-        // Initialize presenter and load user data
-        presenter = new ProfilePresenter(this);
-        presenter.loadUserData();
+    private void loadFirebaseUserProfileImage() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null && user.getPhotoUrl() != null) {
+            Glide.with(this)
+                    .load(user.getPhotoUrl())
+                    .placeholder(R.drawable.default_profile)
+                    .into(profileImage);
+        }
     }
 
     @Override
@@ -87,6 +117,50 @@ public class ProfileFragment extends Fragment implements IProfileView {
             phoneDisplay.setText(phone);
             countryDisplay.setText(country);
         }
+    }
+
+    @Override
+    public void loadProfileImage(String imageUrl) {
+        Glide.with(this)
+                .load(imageUrl)
+                .placeholder(R.drawable.default_profile)
+                .into(profileImage);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        }
+        return false;
+    }
+
+    private void checkConnection() {
+        if (!isNetworkAvailable()) {
+            connectionLostContainer.setVisibility(View.VISIBLE);
+            mainContentContainer.setVisibility(View.GONE);
+            connectionLostAnimation.playAnimation();
+        } else {
+            connectionLostContainer.setVisibility(View.GONE);
+            mainContentContainer.setVisibility(View.VISIBLE);
+            connectionLostAnimation.cancelAnimation();
+        }
+    }
+
+    private void setupConnectionRetryListener() {
+        connectionLostContainer.setOnClickListener(v -> {
+            if (isNetworkAvailable()) {
+                connectionLostContainer.setVisibility(View.GONE);
+                mainContentContainer.setVisibility(View.VISIBLE);
+                connectionLostAnimation.cancelAnimation();
+                presenter.loadUserData();
+            } else {
+                Toast.makeText(getContext(), "Still offline. Please check your connection",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

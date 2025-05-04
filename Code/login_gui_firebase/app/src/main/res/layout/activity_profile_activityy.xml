@@ -6,29 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".SignUp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/relativeLayout"
+    <!-- This container holds all your main content -->
+    <RelativeLayout
+        android:id="@+id/main_content_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.7"
-        android:background="#FC9A01">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/Profiletxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="162dp"
-            android:layout_marginEnd="162dp"
-            android:layout_marginBottom="627dp"
-            android:fontFamily="@font/league_spartan"
-            android:text="@string/Profile"
-            android:textColor="@color/white"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.7"
+            android:background="#FC9A01">
+
+            <TextView
+                android:id="@+id/Profiletxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="162dp"
+                android:layout_marginEnd="162dp"
+                android:layout_marginBottom="650dp"
+                android:fontFamily="@font/league_spartan"
+                android:text="@string/Profile"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
@@ -41,7 +51,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
-            android:layout_height="600dp">
+            android:layout_height="650dp">
 
             <!-- Name Field (changed from EditText to TextView) -->
             <TextView
@@ -206,16 +216,32 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageView
-                android:id="@+id/imageView7"
-                android:layout_width="106dp"
-                android:layout_height="54dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="152dp"
+            <FrameLayout
+                android:layout_width="150dp"
+                android:layout_height="120dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/image_placeholder"
+                android:clipToOutline="true"
+                android:elevation="4dp"
+                app:layout_constraintBottom_toTopOf="@+id/firstnameDisplay"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/default_profile" />
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+            </FrameLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
+    <!-- Connection lost view (stays at the bottom to overlay when needed) -->
+    <include layout="@layout/connection_lost"
+        android:visibility="gone"
+        android:id="@+id/connection_lost_container"/>
 </RelativeLayout>

@@ -50,13 +50,14 @@ public class ProfilePresenter {
     public void loadUserData() {
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
+            // Try to get data from Firestore first
             db.collection("users").document(currentUser.getEmail())
                     .get()
                     .addOnSuccessListener(document -> {
                         if (document.exists()) {
+                            // User exists in Firestore (regular sign-up)
                             String fullName = document.getString("firstName") + " " +
                                     document.getString("surname");
-
                             String countryCode = document.getString("countryCode");
                             String countryName = getCountryName(countryCode);
 
@@ -64,13 +65,37 @@ public class ProfilePresenter {
                                     fullName,
                                     document.getString("email"),
                                     document.getString("phone"),
-                                    countryName // Passing the country name instead of code
+                                    countryName
                             );
                         } else {
-                            view.showError("Profile data not found");
+                            // User doesn't exist in Firestore (Google sign-in)
+                            String fullName = currentUser.getDisplayName();
+                            String email = currentUser.getEmail();
+                            String phone = "Not set"; // Google doesn't provide phone number
+                            String country = "Not set";
+
+                            view.showUserData(
+                                    fullName != null ? fullName : "Google User",
+                                    email != null ? email : "No email",
+                                    phone,
+                                    country
+                            );
                         }
                     })
-                    .addOnFailureListener(e -> view.showError(e.getMessage()));
+                    .addOnFailureListener(e -> {
+                        // Fallback to Firebase Auth data if Firestore fails
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null) {
+                            view.showUserData(
+                                    user.getDisplayName() != null ? user.getDisplayName() : "Google User",
+                                    user.getEmail() != null ? user.getEmail() : "No email",
+                                    "Not set",
+                                    "Not set"
+                            );
+                        } else {
+                            view.showError("User data not available");
+                        }
+                    });
         }
     }
 
