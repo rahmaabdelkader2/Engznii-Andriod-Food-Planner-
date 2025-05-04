@@ -131,6 +131,9 @@ public class SignUp extends AppCompatActivity {
                 email.setText("");
                 pass.setText("");
                 countrySpinner.setSelection(0);
+
+                startActivity(new Intent(SignUp.this, Login.class));
+                finish();
             }
 
             @Override
