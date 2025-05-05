@@ -108,8 +108,6 @@ public class FavFragment extends Fragment implements IFavView,OnFavouriteMealCli
 
         recyclerView.setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
-
-        // Open MealFragment when a meal is clicked
         MealFragment mealFragment = MealFragment.newInstance(meal.getIdMeal(), null);
 
         getParentFragmentManager().beginTransaction()

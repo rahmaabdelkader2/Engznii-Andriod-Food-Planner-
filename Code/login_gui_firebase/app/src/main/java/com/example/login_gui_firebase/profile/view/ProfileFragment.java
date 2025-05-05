@@ -33,8 +33,6 @@ public class ProfileFragment extends Fragment implements IProfileView {
     Button logout;
     private FirebaseAuth mAuth;
     private SharedPreferences sharedPreferences;
-    private static final String PREFS_NAME = "LoginPrefs";
-//    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
     private View connectionLostContainer;
     private LottieAnimationView connectionLostAnimation;
     private View mainContentContainer;
@@ -51,17 +49,15 @@ public class ProfileFragment extends Fragment implements IProfileView {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
-        sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = requireActivity().getSharedPreferences("UserPref", Context.MODE_PRIVATE);
 
         initializeViews(view);
         setupLogoutButton();
         checkConnection();
         setupConnectionRetryListener();
 
-
         presenter = new ProfilePresenter(this);
         presenter.loadUserData();
-
 
         loadFirebaseUserProfileImage();
     }
@@ -83,16 +79,24 @@ public class ProfileFragment extends Fragment implements IProfileView {
 
     private void setupLogoutButton() {
         logout.setOnClickListener(v -> {
+            // Sign out from Firebase
             mAuth.signOut();
+
+            // Clear all relevant preferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.clear();
+            editor.remove("isGuest");
+            editor.remove("isSignedIn");
+            editor.remove("userId");
+            editor.remove("isLoggedIn");
             editor.apply();
 
+            // Redirect to login with clear flags
             Intent intent = new Intent(requireActivity(), Login.class);
             intent.putExtra("FROM_LOGOUT", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             requireActivity().finishAffinity();
+
             Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
         });
     }

@@ -31,7 +31,7 @@
 
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/animationView4"
+                android:id="@+id/animationView3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="16dp"
@@ -43,7 +43,7 @@
                 app:lottie_rawRes="@raw/time" />
 
             <Button
-                android:id="@+id/next3"
+                android:id="@+id/next2"
                 android:layout_width="133dp"
                 android:layout_height="55dp"
                 android:layout_marginBottom="50dp"
@@ -76,8 +76,8 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="140dp"
                 android:layout_marginBottom="3dp"
-                android:tint="@color/primary_color"
-                app:layout_constraintBottom_toTopOf="@+id/next3"
+                app:tint="@color/primary_color"
+                app:layout_constraintBottom_toTopOf="@+id/next2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/line1" />
 
@@ -87,8 +87,8 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="180dp"
                 android:layout_marginBottom="3dp"
-                android:tint="@color/secondary_color"
-                app:layout_constraintBottom_toTopOf="@+id/next3"
+                app:tint="@color/secondary_color"
+                app:layout_constraintBottom_toTopOf="@+id/next2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/line1" />
 
@@ -98,8 +98,8 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="220dp"
                 android:layout_marginBottom="3dp"
-                android:tint="@color/primary_color"
-                app:layout_constraintBottom_toTopOf="@+id/next3"
+                app:tint="@color/primary_color"
+                app:layout_constraintBottom_toTopOf="@+id/next2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/line1" />
 

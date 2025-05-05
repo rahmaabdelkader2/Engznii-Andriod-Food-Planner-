@@ -31,7 +31,7 @@ public class SignUp extends AppCompatActivity {
 
     private TextView Skip_Signup;
 
-   private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     private final String[][] countries = {
             {"American", "US"},

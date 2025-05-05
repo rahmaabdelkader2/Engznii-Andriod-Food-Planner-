@@ -2,6 +2,7 @@ package com.example.login_gui_firebase;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -23,11 +24,12 @@ public class OnBoardScreen1 extends AppCompatActivity {
 
         onboardText = findViewById(R.id.txtboard3);
 
-        animationView = findViewById(R.id.animationView4);
+        animationView = findViewById(R.id.animationView2);
         animationView.playAnimation();
 
-        nextButton = findViewById(R.id.next3);
+        nextButton = findViewById(R.id.next1);
         nextButton.setOnClickListener(view -> {
+
             Intent intent = new Intent(OnBoardScreen1.this, OnBoardScreen2.class);
             startActivity(intent);
         });

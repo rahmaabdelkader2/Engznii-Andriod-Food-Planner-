@@ -12,7 +12,6 @@ import retrofit2.http.Query;
 
 public interface MealServices {
 
-    // show Random meal each time
     @GET("random.php")
     Call<MealResponse> getRandomMeal();
 

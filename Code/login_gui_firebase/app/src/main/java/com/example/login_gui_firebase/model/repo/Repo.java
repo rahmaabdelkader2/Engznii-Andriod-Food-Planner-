@@ -18,7 +18,6 @@ public class Repo implements IRepo {
     private static Repo instance;
     private final ILocalDataSource localDataSource;
     private final IClient client;
-    private final MutableLiveData<List<Meal>> mealsLiveData = new MutableLiveData<>();
 
     private Repo(ILocalDataSource localDataSource, IClient client) {
         this.localDataSource = localDataSource;
