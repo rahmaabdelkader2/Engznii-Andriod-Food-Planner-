@@ -43,7 +43,7 @@ public class ProfileFragment extends Fragment implements IProfileView {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.profile_activityy, container, false);
+        return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     @Override

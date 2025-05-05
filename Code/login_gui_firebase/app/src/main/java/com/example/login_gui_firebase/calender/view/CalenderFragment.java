@@ -29,6 +29,7 @@ import com.example.login_gui_firebase.model.repo.IRepo;
 import com.example.login_gui_firebase.model.repo.Repo;
 import com.example.login_gui_firebase.model.pojo.Meal;
 
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -236,7 +237,7 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
         } else {
         }
     }
-    // Add this method to handle back navigation
+
     public boolean onBackPressed() {
         View fragmentContainer = getView().findViewById(R.id.fragment_containerfav);
         if (fragmentContainer != null && fragmentContainer.getVisibility() == View.VISIBLE) {

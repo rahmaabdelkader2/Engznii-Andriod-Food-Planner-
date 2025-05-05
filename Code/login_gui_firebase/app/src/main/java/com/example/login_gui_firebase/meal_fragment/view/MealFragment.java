@@ -56,6 +56,7 @@ public class MealFragment extends Fragment implements IMealFragmentView{
     private Meal currentMeal;
     private SharedPreferences sharedPreferences;
     private String userId;
+    private Boolean isGuest = false;
     private IMealFragmentPresenter presenter;
     public static MealFragment newInstance(String mealId, String selectedDate) {
         MealFragment fragment = new MealFragment();
@@ -74,6 +75,7 @@ public class MealFragment extends Fragment implements IMealFragmentView{
 
         sharedPreferences = requireActivity().getSharedPreferences("UserPref", getContext().MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", "def");
+        isGuest= sharedPreferences.getBoolean("isGuest", false);
 
         initViews(view);
         setupWebView();
@@ -114,20 +116,30 @@ public class MealFragment extends Fragment implements IMealFragmentView{
         });
 
         calendarIcon.setOnClickListener(v -> {
-            if (currentSelectedDate == null) {
-                showDatePickerDialog();
+            if (isGuest == true) {
+                Toast.makeText(getContext(), "Please login to use this feature", Toast.LENGTH_SHORT).show();
             } else {
-                toggleMealInCalendar();
+                if (currentSelectedDate == null) {
+                    showDatePickerDialog();
+                } else {
+                    toggleMealInCalendar();
+                }
             }
         });
+
+
 
         favoriteIcon.setOnClickListener(v -> {
+            if (isGuest == true) {
+                Toast.makeText(getContext(), "Please login to use this feature", Toast.LENGTH_SHORT).show();
 
-            if (currentMeal != null) {
-                toggleFavoriteStatus();
-            }
+            } else {
+                if (currentMeal != null) {
+                    toggleFavoriteStatus();
+                }}
         });
-    }
+        }
+
 
     private void toggleFavoriteStatus() {
         boolean newFavoriteStatus = !currentMeal.isFavorite();

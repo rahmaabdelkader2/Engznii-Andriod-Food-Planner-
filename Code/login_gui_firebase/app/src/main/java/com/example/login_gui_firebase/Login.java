@@ -32,6 +32,7 @@ public class Login extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private static final String PREFS_NAME = "UserPref";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    private TextView Skip_Login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,9 @@ public class Login extends AppCompatActivity {
         initializeSharedPreferences();
         checkAutoLogin();
         initializeFirebase();
-        setupViews();
+        initializeViews();
+        skipLogin();
+
     }
 
     private void initializeSharedPreferences() {
@@ -59,16 +62,26 @@ public class Login extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseHelper = new Firebase(this);
     }
-    private void setupViews() {
+    private void initializeViews() {
         email = findViewById(R.id.firstnamefield);
         password = findViewById(R.id.emailfiled);
         googlebtn = findViewById(R.id.imageView);
         login = findViewById(R.id.loginbtn2);
         TextView backText = findViewById(R.id.loginclick);
+        Skip_Login = findViewById(R.id.guest_login);
 
         login.setOnClickListener(v -> handleLogin());
         backText.setOnClickListener(v -> navigateToSignUp());
         setupGoogleButton();
+    }
+    private void skipLogin(){
+        Skip_Login.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isGuest", true);
+            editor.apply();
+            startActivity(new Intent(Login.this, MainActivity.class));
+            finish();
+        });
     }
     private void handleLogin() {
         String userEmail = email.getText().toString().trim();

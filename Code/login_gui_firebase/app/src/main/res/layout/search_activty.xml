@@ -34,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/secondary_color"
-                android:text="Categories" />
+                android:text="Categories"
+                android:textSize="10sp" />
 
             <Button
                 android:id="@+id/btn_areas"
@@ -42,7 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/secondary_color"
-                android:text="Areas" />
+                android:text="Areas"
+                android:textSize="10sp"/>
 
             <Button
                 android:id="@+id/btn_ingredients"
@@ -50,7 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/secondary_color"
-                android:text="Ingredients" />
+                android:text="Ingredients"
+                android:textSize="10sp"/>
         </LinearLayout>
 
         <!-- RecyclerView -->

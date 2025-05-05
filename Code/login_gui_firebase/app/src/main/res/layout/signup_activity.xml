@@ -28,6 +28,21 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/guest_signup"
+            android:layout_width="128dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/league_spartan"
+            android:text="@string/skiptoguestmode"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.cardview.widget.CardView

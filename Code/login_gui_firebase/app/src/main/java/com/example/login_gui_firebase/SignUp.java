@@ -29,6 +29,8 @@ public class SignUp extends AppCompatActivity {
     private ImageView googleBtn;
     private Spinner countrySpinner;
 
+    private TextView Skip_Signup;
+
    private SharedPreferences sharedPreferences;
 
     private final String[][] countries = {
@@ -77,8 +79,11 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_activity);
         sharedPreferences = getSharedPreferences("UserPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isGuest", false);
 
         initializeViews();
+        skipSignup();
         setupFirebaseHelper();
         setupSignUpButton();
         setupLoginRedirect();
@@ -94,6 +99,16 @@ public class SignUp extends AppCompatActivity {
         pass = findViewById(R.id.passField);
         googleBtn = findViewById(R.id.googleIcon);
         countrySpinner = findViewById(R.id.countrySpinner);
+        Skip_Signup=findViewById(R.id.guest_signup);
+    }
+    private void skipSignup() {
+        Skip_Signup.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isGuest", true);
+            editor.apply();
+            startActivity(new Intent(SignUp.this, MainActivity.class));
+            finish();
+        });
     }
     private void setupFirebaseHelper() {
 

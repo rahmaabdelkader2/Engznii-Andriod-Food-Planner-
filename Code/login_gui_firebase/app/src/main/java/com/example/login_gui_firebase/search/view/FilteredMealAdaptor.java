@@ -32,7 +32,7 @@ public class FilteredMealAdaptor extends RecyclerView.Adapter<FilteredMealAdapto
     @Override
     public FilteredMealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_filtered_meals, parent, false);
+                .inflate(R.layout.item_filtered_meal, parent, false);
         return new FilteredMealViewHolder(view);
     }
 

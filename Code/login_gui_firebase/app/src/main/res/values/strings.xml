@@ -87,4 +87,5 @@
     <string name="Logout">Logout</string>
     <string name="onboardtxt3">Explore a world of recipes now !</string>
     <string name="orloginwith">Or Continue With</string>
+    <string name="skiptoguestmode">Skip To Guest Mode  =></string>
 </resources>

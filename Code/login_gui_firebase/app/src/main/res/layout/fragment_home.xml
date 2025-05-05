@@ -40,23 +40,31 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
                     android:orientation="horizontal"
                     android:padding="20dp">
 
-                    <!-- Meal Image -->
-                    <ImageView
-                        android:id="@+id/mainMealImage"
+                    <!-- Image wrapped in CardView with matching corner radius -->
+                    <androidx.cardview.widget.CardView
                         android:layout_width="120dp"
                         android:layout_height="120dp"
-                        android:contentDescription="Main meal image"
-                        android:scaleType="centerCrop" />
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        android:layout_marginEnd="16dp">
+
+                        <ImageView
+                            android:id="@+id/mainMealImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="Main meal image"
+                            android:src="@drawable/image_placeholder"
+                            android:scaleType="centerCrop"
+                            android:clipToOutline="true" />
+                    </androidx.cardview.widget.CardView>
 
                     <!-- Text Content -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -87,7 +95,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Country Meals Section -->
+            <!-- Rest of your layout remains the same -->
             <TextView
                 android:id="@+id/countryTitle"
                 android:layout_width="wrap_content"
@@ -101,19 +109,18 @@
                 android:id="@+id/countryMealsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_meal_card" />
 
-            <!-- User Country Meals Section -->
             <TextView
                 android:id="@+id/userCountryTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Meals from your country"
+                android:layout_marginTop="0dp"
                 android:fontFamily="@font/league_spartan"
+                android:text="Meals from your country"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -121,7 +128,7 @@
                 android:id="@+id/userCountryMealsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_meal_card" />
@@ -129,7 +136,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Fragment container (overlay) -->
+    <!-- Fragment container -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
