@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.login_gui_firebase.Login;
 
 public class SplashScreen extends AppCompatActivity {
 

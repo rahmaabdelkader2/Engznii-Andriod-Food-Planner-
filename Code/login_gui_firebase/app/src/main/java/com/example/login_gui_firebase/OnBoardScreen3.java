@@ -2,7 +2,6 @@ package com.example.login_gui_firebase;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,7 +30,7 @@ public class OnBoardScreen3 extends AppCompatActivity {
 
 
         start.setOnClickListener(v -> {
-            Intent intent = new Intent(OnBoardScreen3.this,SignUp.class);
+            Intent intent = new Intent(OnBoardScreen3.this, SignUp.class);
             startActivity(intent);
         });
 

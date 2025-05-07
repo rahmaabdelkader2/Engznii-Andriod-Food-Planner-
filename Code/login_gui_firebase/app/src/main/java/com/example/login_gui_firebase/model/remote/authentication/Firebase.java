@@ -137,43 +137,4 @@ public class Firebase {
                 .set(userData)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Google user data saved"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error saving Google user data", e));
-    }
-//    private void firebaseAuthWithGoogle(String idToken, AuthCallback callback) {
-//        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-//        mAuth.signInWithCredential(credential)
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        FirebaseUser user = mAuth.getCurrentUser();
-//                        if (user != null && task.getResult() != null && task.getResult().getAdditionalUserInfo() != null) {
-//                            if (task.getResult().getAdditionalUserInfo().isNewUser()) {
-//                                storeGoogleUserData(user, callback);
-//                            } else {
-//                                callback.onSuccess(user);
-//                            }
-//                        } else {
-//                            callback.onFailure("Authentication failed: user information not available");
-//                        }
-//                    } else {
-//                        callback.onFailure("Authentication failed.");
-//                    }
-//                });
-//    }
-//
-//    private void storeGoogleUserData(FirebaseUser user, AuthCallback callback) {
-//        Map<String, Object> userData = new HashMap<>();
-//        String fullName = user.getDisplayName();
-//        String[] names = fullName != null ? fullName.split(" ") : new String[]{"", ""};
-//
-//        userData.put("firstName", names.length > 0 ? names[0] : "");
-//        userData.put("surname", names.length > 1 ? names[1] : "");
-//        userData.put("fullName", fullName != null ? fullName : "");
-//        userData.put("email", user.getEmail());
-//        userData.put("countryCode", selectedCountryCode);
-//
-//        db.collection("users")
-//                .document(user.getUid())
-//                .set(userData)
-//                .addOnSuccessListener(aVoid -> callback.onSuccess(user))
-//                .addOnFailureListener(e -> callback.onFailure("Error saving user data"));
-//    }
-}
+    }}
