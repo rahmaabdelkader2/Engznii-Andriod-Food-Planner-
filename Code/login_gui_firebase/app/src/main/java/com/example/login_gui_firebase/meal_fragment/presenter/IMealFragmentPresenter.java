@@ -8,7 +8,7 @@ public interface IMealFragmentPresenter {
     void insertMeal(Meal meal, String userId);
     LiveData<Boolean>  isFavorite(String mealId, String userId);
     void setFavoriteStatus(String mealId, boolean isFavorite, String userId);
-//    void deleteMeal(Meal meal,String userId);
+
     void getMealDetails(String mealId);
 
     void scheduleMeal(String mealId, String date, String userId);

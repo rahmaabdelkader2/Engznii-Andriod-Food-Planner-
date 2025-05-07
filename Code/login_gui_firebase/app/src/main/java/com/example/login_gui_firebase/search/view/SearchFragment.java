@@ -1,7 +1,4 @@
 package com.example.login_gui_firebase.search.view;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.login_gui_firebase.NetworkConnectivity;
 import com.example.login_gui_firebase.meal_fragment.view.MealFragment;
 import com.example.login_gui_firebase.R;
 import com.example.login_gui_firebase.model.local.ILocalDataSource;
@@ -54,7 +52,7 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.search_activty, container, false);
+        View view = inflater.inflate(R.layout.search_fragment, container, false);
 
         initializeViews(view);
         setupPresenter();
@@ -71,11 +69,9 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
         fragmentContainer = view.findViewById(R.id.fragment_containerfav);
         fragmentContainer.setVisibility(View.GONE);
 
-        // Initialize connection lost container
+        // connection lost animation
         connectionLostContainer = view.findViewById(R.id.connection_lost_container);
         connectionLostAnimation = connectionLostContainer.findViewById(R.id.animationView4);
-
-        // Make sure it's initially hidden
         connectionLostContainer.setVisibility(View.GONE);
     }
     private void setupPresenter() {
@@ -173,7 +169,7 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
     }
     private void filterItems(String query) {
         if (recyclerView.getAdapter() == adapter) {
-            // Search within categories/areas/ingredients (existing code)
+            // search within categories/areas/ingredients
             List<Object> filtered = new ArrayList<>();
             for (Object item : currentItems) {
                 String name = "";
@@ -193,7 +189,6 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
         } else if (recyclerView.getAdapter() == filteredMealAdapter) {
             // Search within filtered meals
             if (query.isEmpty()) {
-                // If search is empty, show all original filtered meals
                 filteredMealAdapter.setMeals(new ArrayList<>(originalFilteredMeals));
             } else {
                 // Filter based on search query
@@ -265,13 +260,7 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
         showMealFragment(mealId);
     }
     private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-        }
-        return false;
+        return NetworkConnectivity.isNetworkAvailable(getContext());
     }
     private void checkConnection() {
         if (!isNetworkAvailable()) {

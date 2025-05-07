@@ -235,7 +235,7 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
         }
     }
 
-    public boolean onBackPressed() {
+    public boolean onBackCalenderPressed() {
         View fragmentContainer = getView().findViewById(R.id.fragment_containerfav);
         if (fragmentContainer != null && fragmentContainer.getVisibility() == View.VISIBLE) {
             getParentFragmentManager().popBackStack();

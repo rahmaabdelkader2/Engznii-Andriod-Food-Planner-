@@ -65,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
+        if (currentFragment instanceof CalenderFragment) {
+            if (((CalenderFragment) currentFragment).onBackCalenderPressed()) {
+                return;
+            }
+        }
 
         super.onBackPressed();
     }

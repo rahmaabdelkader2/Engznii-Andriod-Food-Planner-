@@ -111,10 +111,6 @@ public class Repo implements IRepo {
         localDataSource.insertMeal(meal);
     }
 
-//    @Override
-//    public void deleteMeal(Meal meal, String userId) {
-//        localDataSource.deleteMeal(meal, userId);
-//    }
     @Override
     public void scheduleMeal(String mealId, String date, String userId) {
         localDataSource.scheduleMeal(mealId, date, userId);

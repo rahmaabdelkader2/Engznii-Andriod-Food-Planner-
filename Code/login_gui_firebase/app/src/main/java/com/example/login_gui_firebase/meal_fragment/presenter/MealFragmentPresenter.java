@@ -32,10 +32,6 @@ public class MealFragmentPresenter implements IMealFragmentPresenter, MealCallba
         repository.setFavoriteStatus(mealId, isFavorite, userId);
     }
 
-//    @Override
-//    public void deleteMeal(Meal meal, String userId) {
-//        repository.deleteMeal(meal, userId);
-//    }
 
     @Override
     public void getMealDetails(String mealId) {

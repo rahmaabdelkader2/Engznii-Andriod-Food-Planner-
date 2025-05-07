@@ -44,33 +44,6 @@ public class FavFragment extends Fragment implements IFavView,OnFavouriteMealCli
     private String userId;
     private boolean isGuest;
 
-//    @Nullable
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.fragment_favourites, container, false);
-//
-//        sharedPreferences = requireActivity().getSharedPreferences("UserPref", getContext().MODE_PRIVATE);
-//        userId = sharedPreferences.getString("userId", "def");
-//
-//        initializeViews(view);
-//        setupRecyclerView();
-//        setupPresenter();
-//
-//        LiveData<List<Meal>> mealsLiveData = presenter.getFavouriteMeals(userId);
-//        mealsLiveData.observe(getViewLifecycleOwner(), meals -> {
-//            if (meals != null && !meals.isEmpty()) {
-//                mealAdapter.updateMeals(meals);
-//                emptyView.setVisibility(View.GONE);
-//                recyclerView.setVisibility(View.VISIBLE);
-//                fragmentContainer.setVisibility(View.GONE);
-//            } else {
-//                emptyView.setVisibility(View.VISIBLE);
-//                fragmentContainer.setVisibility(View.GONE);
-//                recyclerView.setVisibility(View.GONE);
-//            }
-//        });
-//        return view;
-//    }
 
     @Nullable
     @Override
@@ -86,10 +59,8 @@ public class FavFragment extends Fragment implements IFavView,OnFavouriteMealCli
 
         LiveData<List<Meal>> mealsLiveData = presenter.getFavouriteMeals(userId);
         mealsLiveData.observe(getViewLifecycleOwner(), meals -> {
-            // Always update the adapter with the latest meals
             mealAdapter.updateMeals(meals != null ? meals : new ArrayList<>());
 
-            // Only update visibility if MealFragment is not being displayed
             if (fragmentContainer.getVisibility() != View.VISIBLE) {
                 if (meals != null && !meals.isEmpty()) {
                     emptyView.setVisibility(View.GONE);
@@ -139,19 +110,7 @@ public class FavFragment extends Fragment implements IFavView,OnFavouriteMealCli
     public void showError(String errorMessage) {
         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
-//    public boolean onBackFavPressed(){
-//        if (fragmentContainer.getVisibility() == View.VISIBLE) {
-//            getChildFragmentManager().popBackStack();
-//            fragmentContainer.setVisibility(View.GONE);
-//            recyclerView.setVisibility(View.VISIBLE);
-//            emptyView.setVisibility(View.GONE);
-//
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
+
     public boolean onBackFavPressed() {
         if (fragmentContainer.getVisibility() == View.VISIBLE) {
             getChildFragmentManager().popBackStack();
