@@ -24,10 +24,6 @@ public class LocalDataSource implements ILocalDataSource {
         return instance;
     }
 
-    @Override
-    public LiveData<List<Meal>> getAllMeals() {
-        return mealDao.getAllMeals();
-    }
 
     @Override
     public void insertMeal(Meal meal) {
@@ -72,5 +68,20 @@ public class LocalDataSource implements ILocalDataSource {
     @Override
     public LiveData<Boolean>  isFavorite(String mealId, String userId) {
         return mealDao.isFavorite(mealId, userId);
+    }
+
+    @Override
+    public LiveData<Integer> mealExists(String mealId, String userId) {
+        return mealDao.mealExists(mealId, userId);
+    }
+
+    @Override
+    public LiveData<String> getScheduledDate(String mealId, String userId) {
+        return mealDao.getScheduledDate(mealId, userId);
+    }
+
+    @Override
+    public Meal getMealById(String mealId) {
+        return mealDao.getMealById(mealId);
     }
 }

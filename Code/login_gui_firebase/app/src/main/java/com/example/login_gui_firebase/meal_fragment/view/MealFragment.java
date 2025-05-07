@@ -1,6 +1,7 @@
 package com.example.login_gui_firebase.meal_fragment.view;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +59,7 @@ public class MealFragment extends Fragment implements IMealFragmentView{
     private String userId;
     private Boolean isGuest = false;
     private IMealFragmentPresenter presenter;
+    private Context context ;
     public static MealFragment newInstance(String mealId, String selectedDate) {
         MealFragment fragment = new MealFragment();
         Bundle args = new Bundle();
@@ -82,7 +84,10 @@ public class MealFragment extends Fragment implements IMealFragmentView{
         setupClickListeners();
 
 
-        presenter = new MealFragmentPresenter(this, Repo.getInstance(LocalDataSource.getInstance(this.getContext()), Client.getInstance()));
+        presenter = new MealFragmentPresenter(this, Repo.getInstance(context,LocalDataSource.getInstance(this.getContext()), Client.getInstance()));presenter = new MealFragmentPresenter(this,
+                Repo.getInstance(requireContext(),
+                        LocalDataSource.getInstance(this.getContext()),
+                        Client.getInstance()));
 
         if (getArguments() != null) {
             currentMealId = getArguments().getString(ARG_MEAL_ID);
@@ -145,10 +150,23 @@ public class MealFragment extends Fragment implements IMealFragmentView{
         boolean newFavoriteStatus = !currentMeal.isFavorite();
         currentMeal.setFavorite(newFavoriteStatus);
         updateFavoriteIcon(newFavoriteStatus);
-        presenter.insertMeal(currentMeal, userId);
-        presenter.setFavoriteStatus(currentMeal.getIdMeal(), newFavoriteStatus, userId);
-        String message = newFavoriteStatus ? "Added to favorites" : "Removed from favorites";
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+
+        // Check if meal exists in database
+        LiveData<Integer> existsLiveData = presenter.mealExists(currentMeal.getIdMeal(), userId);
+        existsLiveData.observe(getViewLifecycleOwner(), existsCount -> {
+            if (existsCount != null) {
+                if (existsCount > 0) {
+                    // Meal exists, just update favorite status
+                    presenter.setFavoriteStatus(currentMeal.getIdMeal(), newFavoriteStatus, userId);
+                } else {
+                    // Meal doesn't exist, insert it
+                    presenter.insertMeal(currentMeal, userId);
+                }
+                String message = newFavoriteStatus ? "Added to favorites" : "Removed from favorites";
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                existsLiveData.removeObservers(getViewLifecycleOwner());
+            }
+        });
     }
 
     private void updateFavoriteIcon(boolean isFavorite) {
@@ -220,6 +238,8 @@ public class MealFragment extends Fragment implements IMealFragmentView{
     private void toggleMealInCalendar() {
         // Remove any existing observers first
         LiveData<Boolean> isScheduled = presenter.isMealScheduled(currentMealId, currentSelectedDate);
+        //LiveData<Boolean> isScheduled = presenter.isMealScheduled(currentMealId);
+
         isScheduled.removeObservers(getViewLifecycleOwner());
 
         isScheduled.observe(getViewLifecycleOwner(), scheduled -> {
@@ -231,6 +251,7 @@ public class MealFragment extends Fragment implements IMealFragmentView{
                         Toast.makeText(getContext(), "Meal removed from calendar", Toast.LENGTH_SHORT).show();
                     }
                 } else {
+
                     presenter.scheduleMeal(currentMealId, currentSelectedDate, userId);
                     if (getContext() != null) {
                         Toast.makeText(getContext(), "Meal added to calendar", Toast.LENGTH_SHORT).show();
@@ -323,10 +344,16 @@ public class MealFragment extends Fragment implements IMealFragmentView{
     public void onDestroyView() {
         if (webView != null) {
             webView.destroy();
+            webView = null;
         }
+        mealImage = null;
+        mealName = null;
+        // Nullify other views
+        presenter = null; // Consider if this is appropriate for your architecture
         super.onDestroyView();
     }
-    @Override
+
+
     public void updateUI(Meal meal) {
         currentMeal = meal;
         currentMeal.setUserId(userId);
@@ -342,11 +369,22 @@ public class MealFragment extends Fragment implements IMealFragmentView{
                 meal.setFavorite(isFavorite);
                 updateFavoriteIcon(isFavorite);
             } else {
-                // Default to false if no favorite status found
                 meal.setFavorite(false);
                 updateFavoriteIcon(false);
             }
         });
+
+        // Observe scheduled status if no date was passed in arguments
+        if (currentSelectedDate == null) {
+            LiveData<String> scheduledDateLiveData = presenter.getScheduledDate(meal.getIdMeal(), userId);
+            scheduledDateLiveData.observe(getViewLifecycleOwner(), scheduledDate -> {
+                if (scheduledDate != null) {
+                    currentSelectedDate = scheduledDate;
+                    updateCalendarIcon();
+                }
+                scheduledDateLiveData.removeObservers(getViewLifecycleOwner());
+            });
+        }
 
         Glide.with(this)
                 .load(meal.getStrMealThumb())

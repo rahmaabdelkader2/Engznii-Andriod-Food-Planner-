@@ -122,9 +122,10 @@ public class HomeFragment extends Fragment implements IView, OnMealClickListener
     private void setupPresenter() {
         ILocalDataSource localDataSource = new LocalDataSource(getContext());
         IClient client = Client.getInstance();
-        IRepo repository = Repo.getInstance(localDataSource, client);
+        IRepo repository = Repo.getInstance(getContext(),localDataSource, client);
         presenter = new Presenter(this, repository);
     }
+
 
     private void loadUserCountry() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -144,9 +145,14 @@ public class HomeFragment extends Fragment implements IView, OnMealClickListener
                                     if (userCountryCode != null && !userCountryCode.isEmpty()) {
                                         String mealArea = mapCountryCodeToArea(userCountryCode);
                                         Log.d("HomeFragment", "Mapped meal area: " + mealArea);
+                                        userCountryTitle.setText("Meals from your country");
+                                        userCountryTitle.setVisibility(View.VISIBLE);
+                                        userCountryMealsRecyclerView.setVisibility(View.VISIBLE);
                                         presenter.getMealsByArea(mealArea);
                                     } else {
-                                        userCountryTitle.setText("Set your country in profile");
+                                        // Hide the section if no country is set
+                                        userCountryTitle.setVisibility(View.GONE);
+                                        userCountryMealsRecyclerView.setVisibility(View.GONE);
                                     }
                                 }
                             }
@@ -211,8 +217,15 @@ public class HomeFragment extends Fragment implements IView, OnMealClickListener
         randomMealArea.setVisibility(visibility);
         countryMealsRecyclerView.setVisibility(visibility);
         countryTitle.setVisibility(visibility);
-        userCountryMealsRecyclerView.setVisibility(visibility);
-        userCountryTitle.setVisibility(visibility);
+
+        // Only show user country section if it was previously visible (i.e., user has country set)
+        if (userCountryCode != null && !userCountryCode.isEmpty()) {
+            userCountryMealsRecyclerView.setVisibility(visibility);
+            userCountryTitle.setVisibility(visibility);
+        } else {
+            userCountryMealsRecyclerView.setVisibility(View.GONE);
+            userCountryTitle.setVisibility(View.GONE);
+        }
     }
 
     @Override

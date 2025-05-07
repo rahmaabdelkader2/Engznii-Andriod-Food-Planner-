@@ -20,7 +20,9 @@ public class FavMealAdaptor extends RecyclerView.Adapter<FavMealAdaptor.MealView
 
     private OnFavouriteMealClick listener;
 
-
+    public List<Meal> getMeals() {
+        return meals;
+    }
     public FavMealAdaptor(List<Meal> meals, OnFavouriteMealClick listener) {
         this.meals = meals;
         this.listener = listener;

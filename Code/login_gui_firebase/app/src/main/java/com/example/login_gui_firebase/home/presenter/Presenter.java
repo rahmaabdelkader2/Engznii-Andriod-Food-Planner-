@@ -83,7 +83,7 @@ public class Presenter implements IPresenter ,MealCallback, MealFilteredCallback
     @Override
     public void onSuccessFilteredMeal(List<FilteredMeal> filteredMeals) {
         if (filteredMeals != null && !filteredMeals.isEmpty()) {
-            fetchMealDetails(filteredMeals); // Now fetches all meals without limit
+            fetchMealDetails(filteredMeals);
         } else {
             view.showError("No meals found for this area ");
         }

@@ -28,11 +28,18 @@ public interface IRepo {
     LiveData<Boolean> isFavorite(String mealId, String userId);
 
     void insertMeal(Meal meal, String userId);
-    void deleteMeal(Meal meal, String userId);
+//    void deleteMeal(Meal meal, String userId);
 
     // Meal scheduling operations
     void scheduleMeal(String mealId, String date, String userId);
     void unscheduleMeal(String mealId, String userId);
     LiveData<List<Meal>> getMealsForDate(String date, String userId);
-    LiveData<Boolean> isMealScheduled(String mealId, String date);
+
+    LiveData<Integer> mealExists(String mealId, String userId);
+
+
+    LiveData<Boolean> isMealScheduled(String mealId,String date);
+    LiveData<String> getScheduledDate(String mealId, String userId);
+
+    void getMealDetailsOffline(String mealId, MealCallback callback);
 }

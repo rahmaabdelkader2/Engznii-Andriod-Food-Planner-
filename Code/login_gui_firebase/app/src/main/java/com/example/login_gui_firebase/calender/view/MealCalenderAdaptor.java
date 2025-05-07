@@ -43,11 +43,7 @@ public class MealCalenderAdaptor extends RecyclerView.Adapter<MealCalenderAdapto
             Meal meal = meals.get(position);
             holder.bind(meal);
 
-//            holder.itemView.setOnClickListener(v -> {
-//                if (listener != null) {
-//                    listener.onMealClick(meal);
-//                }
-//            });
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -88,7 +84,7 @@ public class MealCalenderAdaptor extends RecyclerView.Adapter<MealCalenderAdapto
         public void bind(Meal meal) {
             mealName.setText(meal.getStrMeal());
             mealCategory.setText(meal.getStrCategory());
-            mealArea.setText(meal.getStrArea()); // Set the area text
+            mealArea.setText(meal.getStrArea());
 
             Glide.with(itemView.getContext())
                     .load(meal.getStrMealThumb())

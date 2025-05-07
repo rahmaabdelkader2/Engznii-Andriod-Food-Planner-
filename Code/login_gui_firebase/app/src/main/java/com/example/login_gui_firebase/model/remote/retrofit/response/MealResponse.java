@@ -12,7 +12,4 @@ public class MealResponse {
     public List<Meal> getMeals() {
         return meals;
     }
-    public Meal getFirstMeal() {
-        return (meals != null && !meals.isEmpty()) ? meals.get(0) : null;
-    }
 }

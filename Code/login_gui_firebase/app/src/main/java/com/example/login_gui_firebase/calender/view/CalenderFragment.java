@@ -77,7 +77,7 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
     private void setupPresenter() {
         ILocalDataSource localDataSource = LocalDataSource.getInstance(requireContext());
         IClient client = Client.getInstance();
-        IRepo repository = Repo.getInstance(localDataSource, client);
+        IRepo repository = Repo.getInstance(getContext(),localDataSource, client);
         presenter = new CalenderPresenter(this, repository);
     }
 
@@ -129,7 +129,6 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
         updateDateDisplay(today);
         presenter.getMealsForDate(today, userId);
 
-        // Now this is safe because presenter is initialized
         LiveData<List<Meal>> mealsLiveData = presenter.getMealsForDate(currentSelectedDate, userId);
         mealsLiveData.observe(getViewLifecycleOwner(), meals -> {
             if (meals != null && !meals.isEmpty()) {
@@ -161,15 +160,13 @@ public class CalenderFragment extends Fragment implements ICalenderView,OnMealCl
     }
 
     private void showMealFragment(String mealId) {
+
         try {
             if (!isDateWithinAllowedRange(currentSelectedDate)) {
                 return;
             }
-
-            // Safely get the root view
             View rootView = getView();
             if (rootView == null) {
-
                 return;
             }
 

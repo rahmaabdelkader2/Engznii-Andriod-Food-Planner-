@@ -1,5 +1,9 @@
 package com.example.login_gui_firebase.model.repo;
 
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -18,15 +22,17 @@ public class Repo implements IRepo {
     private static Repo instance;
     private final ILocalDataSource localDataSource;
     private final IClient client;
+    private Context context;
 
-    private Repo(ILocalDataSource localDataSource, IClient client) {
+    private Repo(Context context,ILocalDataSource localDataSource, IClient client) {
         this.localDataSource = localDataSource;
         this.client = client;
+        this.context=context.getApplicationContext();
     }
 
-    public static synchronized Repo getInstance(ILocalDataSource localDataSource, IClient client) {
+    public static synchronized Repo getInstance(Context context,ILocalDataSource localDataSource, IClient client) {
         if (instance == null) {
-            instance = new Repo(localDataSource, client);
+            instance = new Repo(context,localDataSource, client);
         }
         return instance;
     }
@@ -72,6 +78,19 @@ public class Repo implements IRepo {
     }
 
     @Override
+    public void getMealDetailsOffline(String mealId, MealCallback callback) {
+        new Thread(() -> {
+            Meal meal = localDataSource.getMealById(mealId);
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (meal != null) {
+                    callback.onSuccess_meal(List.of(meal));
+                } else {
+                    callback.onFailure_meal("Meal not found in local storage");
+                }
+            });
+        }).start();
+    }
+    @Override
     public LiveData<List<Meal>> getFavouriteMeals(String userId) {
         return localDataSource.getFavouriteMeals(userId);
     }
@@ -92,10 +111,10 @@ public class Repo implements IRepo {
         localDataSource.insertMeal(meal);
     }
 
-    @Override
-    public void deleteMeal(Meal meal, String userId) {
-        localDataSource.deleteMeal(meal, userId);
-    }
+//    @Override
+//    public void deleteMeal(Meal meal, String userId) {
+//        localDataSource.deleteMeal(meal, userId);
+//    }
     @Override
     public void scheduleMeal(String mealId, String date, String userId) {
         localDataSource.scheduleMeal(mealId, date, userId);
@@ -111,8 +130,19 @@ public class Repo implements IRepo {
         return localDataSource.getMealsForDate(date, userId);
     }
 
+
     @Override
-    public LiveData<Boolean> isMealScheduled(String mealId, String date) {
+    public LiveData<Integer> mealExists(String mealId, String userId) {
+        return localDataSource.mealExists(mealId, userId);
+    }
+
+    @Override
+    public LiveData<Boolean> isMealScheduled(String mealId,String date) {
         return localDataSource.isMealScheduled(mealId, date);
+    }
+
+    @Override
+    public LiveData<String> getScheduledDate(String mealId, String userId) {
+        return localDataSource.getScheduledDate(mealId, userId);
     }
 }

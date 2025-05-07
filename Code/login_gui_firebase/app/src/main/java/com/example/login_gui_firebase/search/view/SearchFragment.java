@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
     private void setupPresenter() {
         ILocalDataSource localDataSource = new LocalDataSource(getContext());
         IClient client = Client.getInstance();
-        IRepo repository = Repo.getInstance(localDataSource, client);
+        IRepo repository = Repo.getInstance(getContext(),localDataSource, client);
         searchPresenter = new SearchPresenter(this, repository);
     }
     private void setupAdapters() {
@@ -308,7 +308,7 @@ public class SearchFragment extends Fragment implements SearchIview ,OnItemClick
             } else {
                 recyclerView.setVisibility(View.GONE);
                 fragmentContainer.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Still offline. Please check your connection",
+                Toast.makeText(getContext(), "You are offline. Please check your connection",
                         Toast.LENGTH_SHORT).show();
             }
         });

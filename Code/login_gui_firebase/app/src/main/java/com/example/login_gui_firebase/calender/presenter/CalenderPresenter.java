@@ -20,20 +20,20 @@ public class CalenderPresenter implements ICalenderPresenter {
         return repository.getMealsForDate(date, userId);
     }
 
-    @Override
-    public void scheduleMeal(String mealId, String date, String userId) {
-        repository.scheduleMeal(mealId, date, userId);
-    }
-
-    @Override
-    public void unscheduleMeal(String mealId, String userId) {
-        repository.unscheduleMeal(mealId, userId);
-    }
-
-    @Override
-    public LiveData<Boolean> isMealScheduled(String mealId, String date) {
-        return repository.isMealScheduled(mealId, date);
-    }
+//    @Override
+//    public void scheduleMeal(String mealId, String date, String userId) {
+//        repository.scheduleMeal(mealId, date, userId);
+//    }
+//
+//    @Override
+//    public void unscheduleMeal(String mealId, String userId) {
+//        repository.unscheduleMeal(mealId, userId);
+//    }
+//
+//    @Override
+//    public LiveData<Boolean> isMealScheduled(String mealId, String date) {
+//        return repository.isMealScheduled(mealId, date);
+//    }
 
     public void detachView() {
         this.view = null;

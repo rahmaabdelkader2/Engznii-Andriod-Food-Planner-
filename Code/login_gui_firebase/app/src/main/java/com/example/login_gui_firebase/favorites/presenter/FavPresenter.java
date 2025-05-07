@@ -21,5 +21,13 @@ public class FavPresenter implements IFavPresenter {
     public LiveData<List<Meal>> getFavouriteMeals(String userId) {
             return repository.getFavouriteMeals(userId);
     }
+    @Override
+    public LiveData<Boolean> isMealScheduled(String mealId, String date) {
+        return repository.isMealScheduled(mealId, date);
+    }
+    @Override
+    public LiveData<String> getScheduledDate(String mealId, String userId) {
+        return repository.getScheduledDate(mealId, userId);
+    }
 }
 

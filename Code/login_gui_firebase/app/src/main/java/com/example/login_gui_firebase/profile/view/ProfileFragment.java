@@ -26,6 +26,7 @@ import com.example.login_gui_firebase.profile.presenter.ProfilePresenter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
 public class ProfileFragment extends Fragment implements IProfileView {
     private TextView fullNameDisplay, emailDisplay, phoneDisplay, countryDisplay;
     private ImageView profileImage;
