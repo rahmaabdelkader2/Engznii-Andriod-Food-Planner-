@@ -6,7 +6,4 @@ import java.util.List;
 
 public interface ICalenderPresenter {
     LiveData<List<Meal>> getMealsForDate(String date, String userId);
-//    void scheduleMeal(String mealId, String date, String userId);
-//    void unscheduleMeal(String mealId, String userId);
-//    LiveData<Boolean> isMealScheduled(String mealId, String date);
 }

@@ -132,13 +132,4 @@ public class Repo implements IRepo {
         return localDataSource.mealExists(mealId, userId);
     }
 
-    @Override
-    public LiveData<Boolean> isMealScheduled(String mealId,String date) {
-        return localDataSource.isMealScheduled(mealId, date);
-    }
-
-    @Override
-    public LiveData<String> getScheduledDate(String mealId, String userId) {
-        return localDataSource.getScheduledDate(mealId, userId);
-    }
 }

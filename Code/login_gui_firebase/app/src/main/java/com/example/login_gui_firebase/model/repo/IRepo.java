@@ -22,7 +22,7 @@ public interface IRepo {
     void filterByIngredient(String ingredient, MealFilteredCallback callback);
     void getMealDetails(String mealId, MealCallback callback);
 
-    // Local data operations (updated to include userId parameters)
+    // Local data operations
     LiveData<List<Meal>> getFavouriteMeals(String userId);
     void setFavoriteStatus(String mealId, boolean isFavorite, String userId);
     LiveData<Boolean> isFavorite(String mealId, String userId);
@@ -35,10 +35,6 @@ public interface IRepo {
     LiveData<List<Meal>> getMealsForDate(String date, String userId);
 
     LiveData<Integer> mealExists(String mealId, String userId);
-
-
-    LiveData<Boolean> isMealScheduled(String mealId,String date);
-    LiveData<String> getScheduledDate(String mealId, String userId);
 
     void getMealDetailsOffline(String mealId, MealCallback callback);
 }
