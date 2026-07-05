@@ -37,4 +37,8 @@ public interface IRepo {
     LiveData<Integer> mealExists(String mealId, String userId);
 
     void getMealDetailsOffline(String mealId, MealCallback callback);
+    // Meal scheduling operations
+
+    LiveData<Boolean> isMealScheduled(String mealId, String date);
+    LiveData<String> getScheduledDate(String mealId, String userId);
 }
