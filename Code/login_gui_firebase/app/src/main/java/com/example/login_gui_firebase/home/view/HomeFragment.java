@@ -130,34 +130,32 @@ public class HomeFragment extends Fragment implements IView, OnMealClickListener
     private void loadUserCountry() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            String userEmail = user.getEmail();
-            if (userEmail != null) {
-                FirebaseFirestore.getInstance().collection("users")
-                        .document(userEmail)
-                        .get()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    userCountryCode = document.getString("countryCode");
-                                    Log.d("HomeFragment", "Raw countryCode: " + userCountryCode);
+            String uid = user.getUid();
+            FirebaseFirestore.getInstance().collection("users")
+                    .document(uid)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                userCountryCode = document.getString("countryCode");
+                                Log.d("HomeFragment", "Raw countryCode: " + userCountryCode);
 
-                                    if (userCountryCode != null && !userCountryCode.isEmpty()) {
-                                        String mealArea = mapCountryCodeToArea(userCountryCode);
-                                        Log.d("HomeFragment", "Mapped meal area: " + mealArea);
-                                        userCountryTitle.setText("Meals from your country");
-                                        userCountryTitle.setVisibility(View.VISIBLE);
-                                        userCountryMealsRecyclerView.setVisibility(View.VISIBLE);
-                                        presenter.getMealsByArea(mealArea);
-                                    } else {
-                                        // Hide the section if no country is set
-                                        userCountryTitle.setVisibility(View.GONE);
-                                        userCountryMealsRecyclerView.setVisibility(View.GONE);
-                                    }
+                                if (userCountryCode != null && !userCountryCode.isEmpty()) {
+                                    String mealArea = mapCountryCodeToArea(userCountryCode);
+                                    Log.d("HomeFragment", "Mapped meal area: " + mealArea);
+                                    userCountryTitle.setText("Meals from your country");
+                                    userCountryTitle.setVisibility(View.VISIBLE);
+                                    userCountryMealsRecyclerView.setVisibility(View.VISIBLE);
+                                    presenter.getMealsByArea(mealArea);
+                                } else {
+                                    // Hide the section if no country is set
+                                    userCountryTitle.setVisibility(View.GONE);
+                                    userCountryMealsRecyclerView.setVisibility(View.GONE);
                                 }
                             }
-                        });
-            }
+                        }
+                    });
         }
     }
 

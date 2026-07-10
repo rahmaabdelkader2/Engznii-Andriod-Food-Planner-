@@ -78,12 +78,13 @@ public class Firebase {
                         user.put("password", password);
 
                         db.collection("users")
-                                .document(email)
+                                .document(firebaseUser.getUid())
                                 .set(user)
                                 .addOnSuccessListener(aVoid -> callback.onSuccess(firebaseUser))
                                 .addOnFailureListener(e -> {
                                     callback.onFailure("Failed to store user data: " + e.getMessage());
                                     firebaseUser.delete();
+
                                 });
                     } else {
                         Exception exception = task.getException();

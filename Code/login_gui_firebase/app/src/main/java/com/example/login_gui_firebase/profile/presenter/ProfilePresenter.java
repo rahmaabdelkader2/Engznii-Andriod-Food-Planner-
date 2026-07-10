@@ -50,7 +50,7 @@ public class ProfilePresenter implements IProfilePresenter{
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
             // Try to get data from Firestore first
-            db.collection("users").document(currentUser.getEmail())
+            db.collection("users").document(currentUser.getUid())
                     .get()
                     .addOnSuccessListener(document -> {
                         if (document.exists()) {
